@@ -34,6 +34,13 @@ Run the three-way comparison against `/goto`:
 ./scripts/run_compare.sh sme /goto
 ```
 
+`run_compare.sh` prints an aligned table directly. The comparison columns are:
+
+- `基线/优化`: scalar baseline time divided by optimized time
+- `GOTO/优化`: existing `/goto/<arch>/<case>.goto` time divided by optimized time
+
+The external goto binaries are run with `-n <N> -m <M> -k <K> -innerLoops 10`.
+
 Useful overrides:
 
 ```bash
@@ -41,6 +48,5 @@ CC=gcc ./scripts/build.sh neon
 ARCH_FLAGS_SVE="-march=armv8-a+sve -msve-vector-bits=scalable" ./scripts/build.sh sve
 ARCH_FLAGS_SME="-march=armv9.2-a+sme -msve-vector-bits=scalable" ./scripts/build.sh sme
 CASES="sgemm,sgemv" ./scripts/run_compare.sh sve /goto
+GOTO_INNER_LOOPS=50 ./scripts/run_compare.sh sme /goto
 ```
-
-Results are written as CSV under `results/` with rows for `original`, `optimized`, and `goto`.

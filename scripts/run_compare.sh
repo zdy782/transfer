@@ -6,51 +6,75 @@ arch="${1:-${ARCH:-all}}"
 goto_root="${2:-${GOTO_ROOT:-/goto}}"
 cases_default="saxpy,scopy,sdot,sgemm,sgemv,sger,sscal,ssyrk"
 cases_csv="${CASES:-$cases_default}"
+goto_inner_loops="${GOTO_INNER_LOOPS:-10}"
+
+case_dims() {
+  case "$1" in
+    saxpy|scopy|sdot|sscal)
+      printf '%s %s %s\n' 1 4096 1
+      ;;
+    sgemv)
+      printf '%s %s %s\n' 96 128 1
+      ;;
+    sger)
+      printf '%s %s %s\n' 64 96 1
+      ;;
+    sgemm)
+      printf '%s %s %s\n' 48 64 64
+      ;;
+    ssyrk)
+      printf '%s %s %s\n' 64 64 48
+      ;;
+    *)
+      printf '%s %s %s\n' 1 1 1
+      ;;
+  esac
+}
 
 run_one_arch() {
   local target_arch="$1"
-  "$root_dir/scripts/build.sh" "$target_arch"
-  mkdir -p "$root_dir/results"
-  local result_csv="$root_dir/results/${target_arch}_comparison.csv"
-  : >"$result_csv"
-  local first=1
+  QUIET=1 "$root_dir/scripts/build.sh" "$target_arch"
   local tmp_dir
   tmp_dir="$(mktemp -d)"
   trap 'rm -rf "$tmp_dir"' RETURN
 
+  local target_arch_upper
+  target_arch_upper="$(printf '%s' "$target_arch" | tr '[:lower:]' '[:upper:]')"
+  printf '\n%s\n' "== ${target_arch_upper} =="
+  python3 "$root_dir/scripts/parse_results.py" \
+    --arch "$target_arch" --case placeholder \
+    --compare-out /dev/null --goto-out /dev/null --header
+
   IFS=',' read -r -a case_names <<<"$cases_csv"
   for short_case in "${case_names[@]}"; do
     [[ -z "$short_case" ]] && continue
-    local compare_bin goto_bin compare_out goto_out
+    local compare_bin goto_bin compare_out goto_out dim_m dim_n dim_k
     compare_bin="$root_dir/build/$target_arch/${short_case}.compare"
     goto_bin="$goto_root/$target_arch/${short_case}.goto"
     compare_out="$tmp_dir/${target_arch}_${short_case}_compare.out"
     goto_out="$tmp_dir/${target_arch}_${short_case}_goto.out"
+    read -r dim_m dim_n dim_k < <(case_dims "$short_case")
 
-    echo "[run] arch=$target_arch case=$short_case original-vs-optimized"
     "$compare_bin" >"$compare_out"
 
     if [[ -x "$goto_bin" ]]; then
-      echo "[run] arch=$target_arch case=$short_case goto=$goto_bin"
-      "$goto_bin" >"$goto_out" 2>&1 || true
+      "$goto_bin" \
+        -n "$dim_n" \
+        -m "$dim_m" \
+        -k "$dim_k" \
+        -innerLoops "$goto_inner_loops" \
+        >"$goto_out" 2>&1 || true
     else
-      echo "[warn] missing goto binary: $goto_bin" >&2
       : >"$goto_out"
     fi
 
-    if [[ "$first" -eq 1 ]]; then
-      python3 "$root_dir/scripts/parse_results.py" \
-        --arch "$target_arch" --case "$short_case" \
-        --compare-out "$compare_out" --goto-out "$goto_out" --header >>"$result_csv"
-      first=0
-    else
-      python3 "$root_dir/scripts/parse_results.py" \
-        --arch "$target_arch" --case "$short_case" \
-        --compare-out "$compare_out" --goto-out "$goto_out" >>"$result_csv"
-    fi
+    python3 "$root_dir/scripts/parse_results.py" \
+      --arch "$target_arch" --case "$short_case" \
+      --compare-out "$compare_out" --goto-out "$goto_out"
   done
-  cat "$result_csv"
-  echo "[done] wrote $result_csv"
+  python3 "$root_dir/scripts/parse_results.py" \
+    --arch "$target_arch" --case placeholder \
+    --compare-out /dev/null --goto-out /dev/null --footer
 }
 
 case "$arch" in

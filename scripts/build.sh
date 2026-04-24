@@ -44,7 +44,9 @@ build_one_arch() {
     baseline_symbol="${fn}_baseline"
     optimized_symbol="${fn}_${target_arch}_optimized"
 
-    echo "[build] arch=$target_arch case=$short_case compiler=$cc_bin"
+    if [[ "${QUIET:-0}" != "1" ]]; then
+      echo "[build] arch=$target_arch case=$short_case compiler=$cc_bin"
+    fi
     # shellcheck disable=SC2086
     "$cc_bin" $common_flags_default $baseline_disable \
       -D"$fn"="$baseline_symbol" \
