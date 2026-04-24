@@ -18,7 +18,7 @@ Expected existing server binaries:
 /goto/sme/ssyrk.goto
 ```
 
-Build one architecture:
+Build one architecture. The default compiler is `clang`; set `CC=...` only when you want to override it:
 
 ```bash
 ./scripts/build.sh neon
@@ -37,7 +37,7 @@ Run the three-way comparison against `/goto`:
 Useful overrides:
 
 ```bash
-CC=clang ./scripts/build.sh sve
+CC=gcc ./scripts/build.sh neon
 ARCH_FLAGS_SVE="-march=armv8-a+sve -msve-vector-bits=scalable" ./scripts/build.sh sve
 ARCH_FLAGS_SME="-march=armv9.2-a+sme -msve-vector-bits=scalable" ./scripts/build.sh sme
 CASES="sgemm,sgemv" ./scripts/run_compare.sh sve /goto

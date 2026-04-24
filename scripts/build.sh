@@ -3,7 +3,7 @@ set -euo pipefail
 
 root_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 arch="${1:-${ARCH:-all}}"
-cc_bin="${CC:-cc}"
+cc_bin="${CC:-clang}"
 common_flags_default="-std=c11 -O3"
 cases_default="saxpy,scopy,sdot,sgemm,sgemv,sger,sscal,ssyrk"
 cases_csv="${CASES:-$cases_default}"
@@ -44,7 +44,7 @@ build_one_arch() {
     baseline_symbol="${fn}_baseline"
     optimized_symbol="${fn}_${target_arch}_optimized"
 
-    echo "[build] arch=$target_arch case=$short_case cc=$cc_bin"
+    echo "[build] arch=$target_arch case=$short_case compiler=$cc_bin"
     # shellcheck disable=SC2086
     "$cc_bin" $common_flags_default $baseline_disable \
       -D"$fn"="$baseline_symbol" \
