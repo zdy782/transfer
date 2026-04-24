@@ -39,7 +39,14 @@ Run the three-way comparison against `/goto`:
 - `基线/优化`: scalar baseline time divided by optimized time
 - `GOTO/优化`: existing `/goto/<arch>/<case>.goto` time divided by optimized time
 
-The external goto binaries are run with `-n <N> -m <M> -k <K> -innerLoops 10`.
+The external goto binaries are run with each routine's supported parameters and `-innerLoops 20`.
+Examples:
+
+- Level-1 routines use `-n`, stride options, and alpha where the routine supports it.
+- `sgemv` uses `-m`, `-n`, `-trans N`, `-lda`, `-alphaR 1.0`, and `-betaR 0.0`.
+- `sger` uses `-m`, `-n`, `-lda`, and `-alphaR 1.0`.
+- `sgemm` uses `-m`, `-n`, `-k`, `-transa N`, `-transb N`, leading dimensions, `-alphaR 1.0`, and `-betaR 0.0`.
+- `ssyrk` uses `-n`, `-k`, `-uplo U`, `-trans N`, leading dimensions, `-alphaR 1.0`, and `-betaR 0.0`.
 
 Useful overrides:
 

@@ -6,7 +6,7 @@ arch="${1:-${ARCH:-all}}"
 goto_root="${2:-${GOTO_ROOT:-/goto}}"
 cases_default="saxpy,scopy,sdot,sgemm,sgemv,sger,sscal,ssyrk"
 cases_csv="${CASES:-$cases_default}"
-goto_inner_loops="${GOTO_INNER_LOOPS:-10}"
+goto_inner_loops="${GOTO_INNER_LOOPS:-20}"
 
 case_dims() {
   case "$1" in
@@ -27,6 +27,89 @@ case_dims() {
       ;;
     *)
       printf '%s %s %s\n' 1 1 1
+      ;;
+  esac
+}
+
+goto_args() {
+  local short_case="$1"
+  local dim_m="$2"
+  local dim_n="$3"
+  local dim_k="$4"
+
+  case "$short_case" in
+    saxpy)
+      printf '%s\n' \
+        -n "$dim_n" \
+        -incx 1 \
+        -incy 1 \
+        -alphaR 1.25 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    scopy|sdot)
+      printf '%s\n' \
+        -n "$dim_n" \
+        -incx 1 \
+        -incy 1 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    sscal)
+      printf '%s\n' \
+        -n "$dim_n" \
+        -incx 1 \
+        -alphaR -0.75 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    sgemv)
+      printf '%s\n' \
+        -m "$dim_m" \
+        -n "$dim_n" \
+        -incx 1 \
+        -incy 1 \
+        -trans N \
+        -lda "$dim_n" \
+        -alphaR 1.0 \
+        -betaR 0.0 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    sger)
+      printf '%s\n' \
+        -m "$dim_m" \
+        -n "$dim_n" \
+        -incx 1 \
+        -incy 1 \
+        -lda "$dim_n" \
+        -alphaR 1.0 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    sgemm)
+      printf '%s\n' \
+        -m "$dim_m" \
+        -n "$dim_n" \
+        -k "$dim_k" \
+        -transa N \
+        -transb N \
+        -lda "$dim_k" \
+        -ldb "$dim_n" \
+        -ldc "$dim_n" \
+        -alphaR 1.0 \
+        -betaR 0.0 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    ssyrk)
+      printf '%s\n' \
+        -n "$dim_n" \
+        -k "$dim_k" \
+        -uplo U \
+        -trans N \
+        -lda "$dim_k" \
+        -ldc "$dim_n" \
+        -alphaR 1.0 \
+        -betaR 0.0 \
+        -innerLoops "$goto_inner_loops"
+      ;;
+    *)
+      printf '%s\n' -innerLoops "$goto_inner_loops"
       ;;
   esac
 }
@@ -58,12 +141,12 @@ run_one_arch() {
     "$compare_bin" >"$compare_out"
 
     if [[ -x "$goto_bin" ]]; then
-      "$goto_bin" \
-        -n "$dim_n" \
-        -m "$dim_m" \
-        -k "$dim_k" \
-        -innerLoops "$goto_inner_loops" \
-        >"$goto_out" 2>&1 || true
+      local goto_argv=()
+      local goto_arg
+      while IFS= read -r goto_arg; do
+        goto_argv+=("$goto_arg")
+      done < <(goto_args "$short_case" "$dim_m" "$dim_n" "$dim_k")
+      "$goto_bin" "${goto_argv[@]}" >"$goto_out" 2>&1 || true
     else
       : >"$goto_out"
     fi
