@@ -96,7 +96,8 @@ static double run_kernel(
         );
     }
 
-    return apply_vectorization_seconds() - start;
+    return (apply_vectorization_seconds() - start)
+        / (double)APPLY_VECTORIZATION_SSYRK_ITERS;
 }
 
 int main(void) {

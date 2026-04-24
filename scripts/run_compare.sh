@@ -41,22 +41,17 @@ goto_args() {
     saxpy)
       printf '%s\n' \
         -n "$dim_n" \
-        -incx 1 \
-        -incy 1 \
         -alphaR 1.25 \
         -innerLoops "$goto_inner_loops"
       ;;
     scopy|sdot)
       printf '%s\n' \
         -n "$dim_n" \
-        -incx 1 \
-        -incy 1 \
         -innerLoops "$goto_inner_loops"
       ;;
     sscal)
       printf '%s\n' \
         -n "$dim_n" \
-        -incx 1 \
         -alphaR -0.75 \
         -innerLoops "$goto_inner_loops"
       ;;
@@ -64,11 +59,7 @@ goto_args() {
       printf '%s\n' \
         -m "$dim_m" \
         -n "$dim_n" \
-        -incx 1 \
-        -incy 1 \
-        -trans N \
         -lda "$dim_n" \
-        -alphaR 1.0 \
         -betaR 0.0 \
         -innerLoops "$goto_inner_loops"
       ;;
@@ -76,10 +67,7 @@ goto_args() {
       printf '%s\n' \
         -m "$dim_m" \
         -n "$dim_n" \
-        -incx 1 \
-        -incy 1 \
         -lda "$dim_n" \
-        -alphaR 1.0 \
         -innerLoops "$goto_inner_loops"
       ;;
     sgemm)
@@ -87,12 +75,10 @@ goto_args() {
         -m "$dim_m" \
         -n "$dim_n" \
         -k "$dim_k" \
-        -transa N \
         -transb N \
         -lda "$dim_k" \
         -ldb "$dim_n" \
         -ldc "$dim_n" \
-        -alphaR 1.0 \
         -betaR 0.0 \
         -innerLoops "$goto_inner_loops"
       ;;
@@ -100,11 +86,8 @@ goto_args() {
       printf '%s\n' \
         -n "$dim_n" \
         -k "$dim_k" \
-        -uplo U \
-        -trans N \
+        -trans T \
         -lda "$dim_k" \
-        -ldc "$dim_n" \
-        -alphaR 1.0 \
         -betaR 0.0 \
         -innerLoops "$goto_inner_loops"
       ;;

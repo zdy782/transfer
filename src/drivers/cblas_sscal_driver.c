@@ -41,7 +41,8 @@ static double run_kernel(
         kernel(n, alpha, scratch_x, 1);
     }
 
-    return apply_vectorization_seconds() - start;
+    return (apply_vectorization_seconds() - start)
+        / (double)APPLY_VECTORIZATION_SSCAL_ITERS;
 }
 
 int main(void) {

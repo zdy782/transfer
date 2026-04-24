@@ -42,7 +42,8 @@ static double run_kernel(
     }
 
     *result_out = sink;
-    return apply_vectorization_seconds() - start;
+    return (apply_vectorization_seconds() - start)
+        / (double)APPLY_VECTORIZATION_DOT_ITERS;
 }
 
 int main(void) {

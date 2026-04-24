@@ -43,7 +43,8 @@ static double run_kernel(
         kernel(n, x, 1, scratch_y, 1);
     }
 
-    return apply_vectorization_seconds() - start;
+    return (apply_vectorization_seconds() - start)
+        / (double)APPLY_VECTORIZATION_SCOPY_ITERS;
 }
 
 int main(void) {

@@ -144,8 +144,8 @@ static inline void apply_vectorization_print_summary(
         improvement = ((before_seconds - after_seconds) / before_seconds) * 100.0;
     }
 
-    printf("使用前(秒)=%.6f\n", before_seconds);
-    printf("使用后(秒)=%.6f\n", after_seconds);
+    printf("使用前(秒)=%.9e\n", before_seconds);
+    printf("使用后(秒)=%.9e\n", after_seconds);
     printf("加速比=%.3fx\n", speedup);
     printf("性能提升=%.2f%%\n", improvement);
     printf("正确性=%s\n", correctness);

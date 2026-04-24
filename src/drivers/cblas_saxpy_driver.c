@@ -46,7 +46,8 @@ static double run_kernel(
         kernel(n, alpha, x, 1, scratch_y, 1);
     }
 
-    return apply_vectorization_seconds() - start;
+    return (apply_vectorization_seconds() - start)
+        / (double)APPLY_VECTORIZATION_SAXPY_ITERS;
 }
 
 int main(void) {
