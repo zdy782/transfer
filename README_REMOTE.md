@@ -44,6 +44,7 @@ The detail table comparison columns are:
 
 The driver-reported baseline, compiler-auto-vectorized, and optimized times are averaged per kernel call.
 The external goto binaries are run with each routine's supported non-default parameters and `-innerLoops 20`.
+If one size fails correctness or exits non-zero, the sweep records that row and continues with the remaining interfaces.
 Both the local comparison driver and the external goto binary are run through the default binding prefix:
 
 ```bash

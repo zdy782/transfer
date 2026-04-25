@@ -186,7 +186,15 @@ run_one_arch() {
       while IFS= read -r compare_arg; do
         compare_argv+=("$compare_arg")
       done < <(compare_args "$short_case" "$dim_m" "$dim_n" "$dim_k")
-      run_bound "$compare_bin" "${compare_argv[@]}" >"$compare_out"
+      local compare_status=0
+      run_bound "$compare_bin" "${compare_argv[@]}" >"$compare_out" 2>&1 \
+        || compare_status=$?
+      if ((compare_status != 0)) && ! grep -q '^正确性=' "$compare_out"; then
+        {
+          printf '正确性=失败\n'
+          printf '备注=compare exit %d\n' "$compare_status"
+        } >>"$compare_out"
+      fi
 
       if [[ -x "$goto_bin" ]]; then
         local goto_argv=()

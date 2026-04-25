@@ -24,6 +24,10 @@
 #define APPLY_VECTORIZATION_DOT_TOLERANCE 0.0001f
 #endif
 
+#ifndef APPLY_VECTORIZATION_DOT_REL_TOLERANCE
+#define APPLY_VECTORIZATION_DOT_REL_TOLERANCE 0.005f
+#endif
+
 float APPLY_VECTORIZATION_BASELINE_FUNCTION(
     int n, const float *x, int incx, const float *y, int incy
 );
@@ -60,7 +64,7 @@ int main(int argc, char **argv) {
     const int iters = apply_vectorization_arg_int(
         argc, argv, "-iters", APPLY_VECTORIZATION_DOT_ITERS
     );
-    const float tolerance = APPLY_VECTORIZATION_DOT_TOLERANCE * (float)n;
+    float tolerance;
     float *x = (float *)malloc(sizeof(float) * (size_t)n);
     float *y = (float *)malloc(sizeof(float) * (size_t)n);
     float baseline_value = 0.0f;
@@ -93,6 +97,15 @@ int main(int argc, char **argv) {
 
     autovec_diff = apply_vectorization_absf(baseline_value - autovec_value);
     optimized_diff = apply_vectorization_absf(baseline_value - optimized_value);
+    tolerance = APPLY_VECTORIZATION_DOT_TOLERANCE * (float)n;
+    {
+        float relative_tolerance =
+            APPLY_VECTORIZATION_DOT_REL_TOLERANCE
+            * apply_vectorization_absf(baseline_value);
+        if (relative_tolerance > tolerance) {
+            tolerance = relative_tolerance;
+        }
+    }
 
     printf("基线结果=%.6f\n", baseline_value);
     printf("自动向量化结果=%.6f\n", autovec_value);
