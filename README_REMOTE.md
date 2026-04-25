@@ -41,6 +41,12 @@ Run the three-way comparison against `/goto`:
 
 The driver-reported baseline and optimized times are averaged per kernel call.
 The external goto binaries are run with each routine's supported non-default parameters and `-innerLoops 20`.
+Both the local comparison driver and the external goto binary are run through the default binding prefix:
+
+```bash
+numactl -m 31 taskset -c 575
+```
+
 Examples:
 
 - Level-1 routines use `-n`, and alpha only where it differs from the default.
@@ -57,4 +63,6 @@ ARCH_FLAGS_SVE="-march=armv8-a+sve -msve-vector-bits=scalable" ./scripts/build.s
 ARCH_FLAGS_SME="-march=armv9.2-a+sme -msve-vector-bits=scalable" ./scripts/build.sh sme
 CASES="sgemm,sgemv" ./scripts/run_compare.sh sve /goto
 GOTO_INNER_LOOPS=50 ./scripts/run_compare.sh sme /goto
+RUN_BIND_PREFIX= ./scripts/run_compare.sh sve /goto
+RUN_BIND_PREFIX="numactl -m 31 taskset -c 575" ./scripts/run_compare.sh sme /goto
 ```

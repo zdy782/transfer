@@ -7,6 +7,20 @@ goto_root="${2:-${GOTO_ROOT:-/goto}}"
 cases_default="saxpy,scopy,sdot,sgemm,sgemv,sger,sscal,ssyrk"
 cases_csv="${CASES:-$cases_default}"
 goto_inner_loops="${GOTO_INNER_LOOPS:-20}"
+run_bind_prefix="${RUN_BIND_PREFIX-numactl -m 31 taskset -c 575}"
+run_bind_argv=()
+
+if [[ -n "$run_bind_prefix" ]]; then
+  read -r -a run_bind_argv <<<"$run_bind_prefix"
+fi
+
+run_bound() {
+  if ((${#run_bind_argv[@]} > 0)); then
+    "${run_bind_argv[@]}" "$@"
+  else
+    "$@"
+  fi
+}
 
 case_dims() {
   case "$1" in
@@ -121,7 +135,7 @@ run_one_arch() {
     goto_out="$tmp_dir/${target_arch}_${short_case}_goto.out"
     read -r dim_m dim_n dim_k < <(case_dims "$short_case")
 
-    "$compare_bin" >"$compare_out"
+    run_bound "$compare_bin" >"$compare_out"
 
     if [[ -x "$goto_bin" ]]; then
       local goto_argv=()
@@ -129,7 +143,7 @@ run_one_arch() {
       while IFS= read -r goto_arg; do
         goto_argv+=("$goto_arg")
       done < <(goto_args "$short_case" "$dim_m" "$dim_n" "$dim_k")
-      "$goto_bin" "${goto_argv[@]}" >"$goto_out" 2>&1 || true
+      run_bound "$goto_bin" "${goto_argv[@]}" >"$goto_out" 2>&1 || true
     else
       : >"$goto_out"
     fi

@@ -20,7 +20,7 @@
     "src/optimized/<arch>": "generated architecture-specific sources",
     "src/drivers": "correctness and timing drivers",
     "scripts/build.sh": "compile original-vs-optimized benchmark binaries",
-    "scripts/run_compare.sh": "run original/optimized and existing goto binaries, emit CSV"
+    "scripts/run_compare.sh": "run original/optimized and existing goto binaries with the configured binding prefix, emit an aligned table"
   },
   "local_generation_note": "SVE and SME are intended for remote hosts that report those ISA capabilities."
 }
