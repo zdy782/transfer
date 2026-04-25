@@ -20,7 +20,7 @@
     "src/optimized/<arch>": "generated architecture-specific sources",
     "src/drivers": "correctness and scalar/autovec/optimized timing drivers",
     "scripts/build.sh": "compile scalar baseline, compiler-autovec, and optimized benchmark binaries",
-    "scripts/run_compare.sh": "run scalar/autovec/optimized and existing goto binaries across several sizes with the configured binding prefix, emit an aligned table"
+    "scripts/run_compare.sh": "run scalar/autovec/optimized and existing goto binaries across hot sizes with the configured binding prefix, emit detail and summary tables"
   },
   "local_generation_note": "SVE and SME are intended for remote hosts that report those ISA capabilities."
 }

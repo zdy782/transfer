@@ -35,7 +35,8 @@ Run the four-way comparison against `/goto`:
 ./scripts/run_compare.sh sme /goto
 ```
 
-`run_compare.sh` prints an aligned table directly. The comparison columns are:
+`run_compare.sh` prints an aligned detail table and then a per-interface summary table.
+The detail table comparison columns are:
 
 - `基线/优化`: scalar baseline time divided by optimized time
 - `自动/优化`: compiler auto-vectorized scalar time divided by optimized time
@@ -51,11 +52,22 @@ numactl -m 31 taskset -c 575
 
 Examples:
 
-- Level-1 routines use multiple `-n` values, and alpha only where it differs from the default.
+Default hot-size sweep:
+
+- Level-1 routines: `n=1024`, `8192`, `65536`, `262144`
+- `sgemv` and `sger`: `64x64`, `128x128`, `256x256`, `512x512`
+- `sgemm`: `32x32x32`, `64x64x64`, `96x96x96`, `128x128x128`
+- `ssyrk`: `n32k32`, `n64k64`, `n128k64`, `n128k128`
+
+GOTO arguments are generated from the same dimensions:
+
+- Level-1 routines use `-n`, and alpha only where it differs from the default.
 - `sgemv` uses `-m`, `-n`, `-lda`, and `-betaR 0.0`.
 - `sger` uses `-m`, `-n`, and `-lda`.
 - `sgemm` uses `-m`, `-n`, `-k`, `-transb N`, leading dimensions, and `-betaR 0.0`.
 - `ssyrk` uses `-n`, `-k`, `-trans T`, `-lda`, and `-betaR 0.0`.
+
+The summary table reports geometric mean ratios (`GM`), optimized-win counts, and the best scalar-vs-optimized size for each interface.
 
 Each generated compare binary also accepts runtime dimensions directly:
 

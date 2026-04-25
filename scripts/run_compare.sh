@@ -27,28 +27,33 @@ case_dims() {
   case "$1" in
     saxpy|scopy|sdot|sscal)
       printf '%s %s %s %s\n' n=1024 1 1024 1
-      printf '%s %s %s %s\n' n=4096 1 4096 1
-      printf '%s %s %s %s\n' n=16384 1 16384 1
+      printf '%s %s %s %s\n' n=8192 1 8192 1
+      printf '%s %s %s %s\n' n=65536 1 65536 1
+      printf '%s %s %s %s\n' n=262144 1 262144 1
       ;;
     sgemv)
-      printf '%s %s %s %s\n' 48x64 48 64 1
-      printf '%s %s %s %s\n' 96x128 96 128 1
-      printf '%s %s %s %s\n' 192x256 192 256 1
+      printf '%s %s %s %s\n' 64x64 64 64 1
+      printf '%s %s %s %s\n' 128x128 128 128 1
+      printf '%s %s %s %s\n' 256x256 256 256 1
+      printf '%s %s %s %s\n' 512x512 512 512 1
       ;;
     sger)
-      printf '%s %s %s %s\n' 32x48 32 48 1
-      printf '%s %s %s %s\n' 64x96 64 96 1
-      printf '%s %s %s %s\n' 128x192 128 192 1
+      printf '%s %s %s %s\n' 64x64 64 64 1
+      printf '%s %s %s %s\n' 128x128 128 128 1
+      printf '%s %s %s %s\n' 256x256 256 256 1
+      printf '%s %s %s %s\n' 512x512 512 512 1
       ;;
     sgemm)
-      printf '%s %s %s %s\n' 24x32x32 24 32 32
-      printf '%s %s %s %s\n' 48x64x64 48 64 64
+      printf '%s %s %s %s\n' 32x32x32 32 32 32
+      printf '%s %s %s %s\n' 64x64x64 64 64 64
       printf '%s %s %s %s\n' 96x96x96 96 96 96
+      printf '%s %s %s %s\n' 128x128x128 128 128 128
       ;;
     ssyrk)
       printf '%s %s %s %s\n' n32k32 32 32 32
-      printf '%s %s %s %s\n' n64k48 64 64 48
+      printf '%s %s %s %s\n' n64k64 64 64 64
       printf '%s %s %s %s\n' n128k64 128 128 64
+      printf '%s %s %s %s\n' n128k128 128 128 128
       ;;
     *)
       printf '%s %s %s %s\n' default 1 1 1
@@ -153,6 +158,9 @@ run_one_arch() {
   local tmp_dir
   tmp_dir="$(mktemp -d)"
   trap 'rm -rf "$tmp_dir"' RETURN
+  local summary_records
+  summary_records="$tmp_dir/${target_arch}_summary.jsonl"
+  : >"$summary_records"
 
   local target_arch_upper
   target_arch_upper="$(printf '%s' "$target_arch" | tr '[:lower:]' '[:upper:]')"
@@ -194,11 +202,18 @@ run_one_arch() {
       python3 "$root_dir/scripts/parse_results.py" \
         --arch "$target_arch" --case "$short_case" --size "$dim_label" \
         --compare-out "$compare_out" --goto-out "$goto_out"
+      python3 "$root_dir/scripts/parse_results.py" \
+        --arch "$target_arch" --case "$short_case" --size "$dim_label" \
+        --compare-out "$compare_out" --goto-out "$goto_out" --record \
+        >>"$summary_records"
     done < <(case_dims "$short_case")
   done
   python3 "$root_dir/scripts/parse_results.py" \
     --arch "$target_arch" --case placeholder \
     --compare-out /dev/null --goto-out /dev/null --footer
+  printf '\n%s\n' "== ${target_arch_upper} 汇总 =="
+  python3 "$root_dir/scripts/parse_results.py" \
+    --summary-records "$summary_records"
 }
 
 case "$arch" in
