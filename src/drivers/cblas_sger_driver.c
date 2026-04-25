@@ -4,6 +4,10 @@
 #define APPLY_VECTORIZATION_BASELINE_FUNCTION cblas_sger_baseline
 #endif
 
+#ifndef APPLY_VECTORIZATION_AUTOVEC_FUNCTION
+#define APPLY_VECTORIZATION_AUTOVEC_FUNCTION cblas_sger_autovec
+#endif
+
 #ifndef APPLY_VECTORIZATION_OPTIMIZED_FUNCTION
 #define APPLY_VECTORIZATION_OPTIMIZED_FUNCTION cblas_sger_optimized
 #endif
@@ -29,6 +33,18 @@
 #endif
 
 void APPLY_VECTORIZATION_BASELINE_FUNCTION(
+    CBLAS_ORDER order,
+    int m,
+    int n,
+    float alpha,
+    const float *x,
+    int incx,
+    const float *y,
+    int incy,
+    float *a,
+    int lda
+);
+void APPLY_VECTORIZATION_AUTOVEC_FUNCTION(
     CBLAS_ORDER order,
     int m,
     int n,
@@ -66,6 +82,9 @@ static double run_kernel(
         float *,
         int
     ),
+    int m,
+    int n,
+    int iters,
     const float *x,
     const float *y,
     const float *seed_a,
@@ -73,119 +92,107 @@ static double run_kernel(
 ) {
     double start = apply_vectorization_seconds();
 
-    for (int iter = 0; iter < APPLY_VECTORIZATION_SGER_ITERS; ++iter) {
-        apply_vectorization_copy_f32(
-            scratch_a,
-            seed_a,
-            (size_t)APPLY_VECTORIZATION_SGER_M * (size_t)APPLY_VECTORIZATION_SGER_N
-        );
-        kernel(
-            CblasRowMajor,
-            APPLY_VECTORIZATION_SGER_M,
-            APPLY_VECTORIZATION_SGER_N,
-            1.0f,
-            x,
-            1,
-            y,
-            1,
-            scratch_a,
-            APPLY_VECTORIZATION_SGER_N
-        );
+    for (int iter = 0; iter < iters; ++iter) {
+        apply_vectorization_copy_f32(scratch_a, seed_a, (size_t)m * (size_t)n);
+        kernel(CblasRowMajor, m, n, 1.0f, x, 1, y, 1, scratch_a, n);
     }
 
-    return (apply_vectorization_seconds() - start)
-        / (double)APPLY_VECTORIZATION_SGER_ITERS;
+    return (apply_vectorization_seconds() - start) / (double)iters;
 }
 
-int main(void) {
-    const size_t matrix_count =
-        (size_t)APPLY_VECTORIZATION_SGER_M * (size_t)APPLY_VECTORIZATION_SGER_N;
-    float *x = (float *)malloc(sizeof(float) * (size_t)APPLY_VECTORIZATION_SGER_M);
-    float *y = (float *)malloc(sizeof(float) * (size_t)APPLY_VECTORIZATION_SGER_N);
+int main(int argc, char **argv) {
+    const int m = apply_vectorization_arg_int(
+        argc, argv, "-m", APPLY_VECTORIZATION_SGER_M
+    );
+    const int n = apply_vectorization_arg_int(
+        argc, argv, "-n", APPLY_VECTORIZATION_SGER_N
+    );
+    const int iters = apply_vectorization_arg_int(
+        argc, argv, "-iters", APPLY_VECTORIZATION_SGER_ITERS
+    );
+    const size_t matrix_count = (size_t)m * (size_t)n;
+    const double checksum_tolerance =
+        APPLY_VECTORIZATION_SGER_CHECKSUM_TOLERANCE * (double)matrix_count;
+    float *x = (float *)malloc(sizeof(float) * (size_t)m);
+    float *y = (float *)malloc(sizeof(float) * (size_t)n);
     float *seed_a = (float *)malloc(sizeof(float) * matrix_count);
     float *baseline_a = (float *)malloc(sizeof(float) * matrix_count);
+    float *autovec_a = (float *)malloc(sizeof(float) * matrix_count);
     float *optimized_a = (float *)malloc(sizeof(float) * matrix_count);
     double baseline_seconds;
+    double autovec_seconds;
     double optimized_seconds;
     double baseline_sum;
+    double autovec_sum;
     double optimized_sum;
-    double checksum_gap;
-    float diff;
+    double autovec_gap;
+    double optimized_gap;
+    float autovec_diff;
+    float optimized_diff;
 
-    if (x == NULL || y == NULL || seed_a == NULL || baseline_a == NULL || optimized_a == NULL) {
+    if (x == NULL || y == NULL || seed_a == NULL || baseline_a == NULL
+        || autovec_a == NULL || optimized_a == NULL) {
         free(x);
         free(y);
         free(seed_a);
         free(baseline_a);
+        free(autovec_a);
         free(optimized_a);
         return apply_vectorization_report_alloc_failure("cblas_sger");
     }
 
-    apply_vectorization_fill_vector(x, APPLY_VECTORIZATION_SGER_M, 0.03125f);
-    apply_vectorization_fill_vector(y, APPLY_VECTORIZATION_SGER_N, 0.046875f);
-    apply_vectorization_fill_matrix(
-        seed_a,
-        APPLY_VECTORIZATION_SGER_M,
-        APPLY_VECTORIZATION_SGER_N,
-        APPLY_VECTORIZATION_SGER_N,
-        0.015625f
-    );
+    apply_vectorization_fill_vector(x, m, 0.03125f);
+    apply_vectorization_fill_vector(y, n, 0.046875f);
+    apply_vectorization_fill_matrix(seed_a, m, n, n, 0.015625f);
 
     baseline_seconds = run_kernel(
-        APPLY_VECTORIZATION_BASELINE_FUNCTION,
-        x,
-        y,
-        seed_a,
-        baseline_a
+        APPLY_VECTORIZATION_BASELINE_FUNCTION, m, n, iters, x, y, seed_a, baseline_a
+    );
+    autovec_seconds = run_kernel(
+        APPLY_VECTORIZATION_AUTOVEC_FUNCTION, m, n, iters, x, y, seed_a, autovec_a
     );
     optimized_seconds = run_kernel(
-        APPLY_VECTORIZATION_OPTIMIZED_FUNCTION,
-        x,
-        y,
-        seed_a,
-        optimized_a
+        APPLY_VECTORIZATION_OPTIMIZED_FUNCTION, m, n, iters, x, y, seed_a, optimized_a
     );
 
     apply_vectorization_copy_f32(baseline_a, seed_a, matrix_count);
+    apply_vectorization_copy_f32(autovec_a, seed_a, matrix_count);
     apply_vectorization_copy_f32(optimized_a, seed_a, matrix_count);
     APPLY_VECTORIZATION_BASELINE_FUNCTION(
-        CblasRowMajor,
-        APPLY_VECTORIZATION_SGER_M,
-        APPLY_VECTORIZATION_SGER_N,
-        1.0f,
-        x,
-        1,
-        y,
-        1,
-        baseline_a,
-        APPLY_VECTORIZATION_SGER_N
+        CblasRowMajor, m, n, 1.0f, x, 1, y, 1, baseline_a, n
+    );
+    APPLY_VECTORIZATION_AUTOVEC_FUNCTION(
+        CblasRowMajor, m, n, 1.0f, x, 1, y, 1, autovec_a, n
     );
     APPLY_VECTORIZATION_OPTIMIZED_FUNCTION(
-        CblasRowMajor,
-        APPLY_VECTORIZATION_SGER_M,
-        APPLY_VECTORIZATION_SGER_N,
-        1.0f,
-        x,
-        1,
-        y,
-        1,
-        optimized_a,
-        APPLY_VECTORIZATION_SGER_N
+        CblasRowMajor, m, n, 1.0f, x, 1, y, 1, optimized_a, n
     );
 
-    baseline_sum = apply_vectorization_checksum_f32((const float *)baseline_a, (int)matrix_count);
-    optimized_sum = apply_vectorization_checksum_f32((const float *)optimized_a, (int)matrix_count);
-    checksum_gap = apply_vectorization_absd(baseline_sum - optimized_sum);
-    diff = apply_vectorization_max_abs_diff_f32((const float *)baseline_a, (const float *)optimized_a, (int)matrix_count);
+    baseline_sum = apply_vectorization_checksum_f32(baseline_a, (int)matrix_count);
+    autovec_sum = apply_vectorization_checksum_f32(autovec_a, (int)matrix_count);
+    optimized_sum = apply_vectorization_checksum_f32(optimized_a, (int)matrix_count);
+    autovec_gap = apply_vectorization_absd(baseline_sum - autovec_sum);
+    optimized_gap = apply_vectorization_absd(baseline_sum - optimized_sum);
+    autovec_diff = apply_vectorization_max_abs_diff_f32(
+        baseline_a, autovec_a, (int)matrix_count
+    );
+    optimized_diff = apply_vectorization_max_abs_diff_f32(
+        baseline_a, optimized_a, (int)matrix_count
+    );
 
     printf("标量校验和=%.6f\n", baseline_sum);
+    printf("自动向量化校验和=%.6f\n", autovec_sum);
     printf("优化后校验和=%.6f\n", optimized_sum);
-    printf("最大绝对误差=%.8f\n", diff);
+    printf("自动向量化最大绝对误差=%.8f\n", autovec_diff);
+    printf("优化后最大绝对误差=%.8f\n", optimized_diff);
 
-    if (diff > APPLY_VECTORIZATION_SGER_TOLERANCE
-        || checksum_gap > APPLY_VECTORIZATION_SGER_CHECKSUM_TOLERANCE) {
-        apply_vectorization_print_summary(
+    if (autovec_diff > APPLY_VECTORIZATION_SGER_TOLERANCE
+        || optimized_diff > APPLY_VECTORIZATION_SGER_TOLERANCE
+        || autovec_gap > checksum_tolerance
+        || optimized_gap > checksum_tolerance) {
+        apply_vectorization_print_summary_three(
             baseline_seconds,
+            autovec_seconds,
             optimized_seconds,
             "失败",
             "checksum mismatch"
@@ -194,12 +201,14 @@ int main(void) {
         free(y);
         free(seed_a);
         free(baseline_a);
+        free(autovec_a);
         free(optimized_a);
         return 2;
     }
 
-    apply_vectorization_print_summary(
+    apply_vectorization_print_summary_three(
         baseline_seconds,
+        autovec_seconds,
         optimized_seconds,
         "通过",
         "checksum ok"
@@ -209,6 +218,7 @@ int main(void) {
     free(y);
     free(seed_a);
     free(baseline_a);
+    free(autovec_a);
     free(optimized_a);
     return 0;
 }

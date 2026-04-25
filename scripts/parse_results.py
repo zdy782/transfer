@@ -7,15 +7,18 @@ from pathlib import Path
 
 
 COLUMNS = (
-    ("arch", "架构", 6),
-    ("case", "接口", 8),
-    ("base", "基线(s)", 12),
-    ("opt", "优化(s)", 12),
-    ("goto", "GOTO(s)", 12),
-    ("base_over_opt", "基线/优化", 12),
-    ("goto_over_opt", "GOTO/优化", 12),
-    ("goto_perf", "GOTO性能", 24),
-    ("status", "状态", 14),
+    ("arch", "架构", 5),
+    ("case", "接口", 6),
+    ("size", "规模", 18),
+    ("base", "基线(s)", 10),
+    ("auto", "自动(s)", 10),
+    ("opt", "优化(s)", 10),
+    ("goto", "GOTO(s)", 10),
+    ("base_over_opt", "基/优", 8),
+    ("auto_over_opt", "自/优", 8),
+    ("goto_over_opt", "G/优", 8),
+    ("goto_perf", "GOTO性能", 20),
+    ("status", "状态", 12),
 )
 
 
@@ -28,6 +31,7 @@ def parse_compare(path: Path) -> dict[str, str]:
     text = path.read_text(encoding="utf-8", errors="replace")
     return {
         "before": parse_key(text, "使用前(秒)"),
+        "autovec": parse_key(text, "自动向量化(秒)"),
         "after": parse_key(text, "使用后(秒)"),
         "correctness": parse_key(text, "正确性"),
         "remark": parse_key(text, "备注"),
@@ -64,7 +68,7 @@ def fmt_time(value: str) -> str:
     if not value:
         return "-"
     try:
-        return f"{float(value):.6g}"
+        return f"{float(value):.3e}"
     except ValueError:
         return value
 
@@ -110,6 +114,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--arch", required=True)
     parser.add_argument("--case", required=True)
+    parser.add_argument("--size", default="-")
     parser.add_argument("--compare-out", required=True, type=Path)
     parser.add_argument("--goto-out", required=True, type=Path)
     parser.add_argument("--header", action="store_true")
@@ -132,10 +137,13 @@ def main() -> int:
     row = {
         "arch": args.arch.upper(),
         "case": args.case,
+        "size": args.size,
         "base": fmt_time(compare["before"]),
+        "auto": fmt_time(compare["autovec"]),
         "opt": fmt_time(compare["after"]),
         "goto": fmt_time(goto["time"]),
         "base_over_opt": ratio(compare["before"], compare["after"]),
+        "auto_over_opt": ratio(compare["autovec"], compare["after"]),
         "goto_over_opt": ratio(goto["time"], compare["after"]),
         "goto_perf": goto_perf(goto),
         "status": status,

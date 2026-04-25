@@ -37,6 +37,18 @@ static inline double apply_vectorization_seconds(void) {
     return (double)ts.tv_sec + ((double)ts.tv_nsec / 1000000000.0);
 }
 
+static inline int apply_vectorization_arg_int(
+    int argc, char **argv, const char *name, int fallback
+) {
+    for (int index = 1; index + 1 < argc; ++index) {
+        if (strcmp(argv[index], name) == 0) {
+            int value = atoi(argv[index + 1]);
+            return value > 0 ? value : fallback;
+        }
+    }
+    return fallback;
+}
+
 static inline void apply_vectorization_fill_vector(float *data, int count, float scale) {
     for (int index = 0; index < count; ++index) {
         data[index] = (float)((index % 29) - 14) * scale;
@@ -147,6 +159,35 @@ static inline void apply_vectorization_print_summary(
     printf("使用前(秒)=%.9e\n", before_seconds);
     printf("使用后(秒)=%.9e\n", after_seconds);
     printf("加速比=%.3fx\n", speedup);
+    printf("性能提升=%.2f%%\n", improvement);
+    printf("正确性=%s\n", correctness);
+    printf("备注=%s\n", remark);
+}
+
+static inline void apply_vectorization_print_summary_three(
+    double before_seconds,
+    double autovec_seconds,
+    double after_seconds,
+    const char *correctness,
+    const char *remark
+) {
+    double baseline_speedup = 0.0;
+    double autovec_speedup = 0.0;
+    double improvement = 0.0;
+
+    if (after_seconds > 0.0) {
+        baseline_speedup = before_seconds / after_seconds;
+        autovec_speedup = autovec_seconds / after_seconds;
+    }
+    if (before_seconds > 0.0) {
+        improvement = ((before_seconds - after_seconds) / before_seconds) * 100.0;
+    }
+
+    printf("使用前(秒)=%.9e\n", before_seconds);
+    printf("自动向量化(秒)=%.9e\n", autovec_seconds);
+    printf("使用后(秒)=%.9e\n", after_seconds);
+    printf("基线/优化=%.3fx\n", baseline_speedup);
+    printf("自动/优化=%.3fx\n", autovec_speedup);
     printf("性能提升=%.2f%%\n", improvement);
     printf("正确性=%s\n", correctness);
     printf("备注=%s\n", remark);

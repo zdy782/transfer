@@ -39,9 +39,10 @@ build_one_arch() {
   IFS=',' read -r -a case_names <<<"$cases_csv"
   for short_case in "${case_names[@]}"; do
     [[ -z "$short_case" ]] && continue
-    local fn baseline_symbol optimized_symbol
+    local fn baseline_symbol autovec_symbol optimized_symbol
     fn="$(case_to_function "$short_case")"
     baseline_symbol="${fn}_baseline"
+    autovec_symbol="${fn}_${target_arch}_autovec"
     optimized_symbol="${fn}_${target_arch}_optimized"
 
     if [[ "${QUIET:-0}" != "1" ]]; then
@@ -54,18 +55,25 @@ build_one_arch() {
       -o "$build_dir/${short_case}_baseline.o"
     # shellcheck disable=SC2086
     "$cc_bin" $common_flags_default $arch_flags \
+      -D"$fn"="$autovec_symbol" \
+      -c "$root_dir/src/original/${fn}_scalar.c" \
+      -o "$build_dir/${short_case}_${target_arch}_autovec.o"
+    # shellcheck disable=SC2086
+    "$cc_bin" $common_flags_default $arch_flags \
       -D"$fn"="$optimized_symbol" \
       -c "$root_dir/src/optimized/$target_arch/${fn}_${target_arch}.c" \
       -o "$build_dir/${short_case}_${target_arch}.o"
     # shellcheck disable=SC2086
     "$cc_bin" $common_flags_default \
       -DAPPLY_VECTORIZATION_BASELINE_FUNCTION="$baseline_symbol" \
+      -DAPPLY_VECTORIZATION_AUTOVEC_FUNCTION="$autovec_symbol" \
       -DAPPLY_VECTORIZATION_OPTIMIZED_FUNCTION="$optimized_symbol" \
       -c "$root_dir/src/drivers/${fn}_driver.c" \
       -o "$build_dir/${short_case}_driver.o"
     # shellcheck disable=SC2086
     "$cc_bin" $common_flags_default \
       "$build_dir/${short_case}_baseline.o" \
+      "$build_dir/${short_case}_${target_arch}_autovec.o" \
       "$build_dir/${short_case}_${target_arch}.o" \
       "$build_dir/${short_case}_driver.o" \
       -o "$build_dir/${short_case}.compare"

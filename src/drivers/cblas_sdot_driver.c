@@ -4,6 +4,10 @@
 #define APPLY_VECTORIZATION_BASELINE_FUNCTION cblas_sdot_baseline
 #endif
 
+#ifndef APPLY_VECTORIZATION_AUTOVEC_FUNCTION
+#define APPLY_VECTORIZATION_AUTOVEC_FUNCTION cblas_sdot_autovec
+#endif
+
 #ifndef APPLY_VECTORIZATION_OPTIMIZED_FUNCTION
 #define APPLY_VECTORIZATION_OPTIMIZED_FUNCTION cblas_sdot_optimized
 #endif
@@ -23,6 +27,9 @@
 float APPLY_VECTORIZATION_BASELINE_FUNCTION(
     int n, const float *x, int incx, const float *y, int incy
 );
+float APPLY_VECTORIZATION_AUTOVEC_FUNCTION(
+    int n, const float *x, int incx, const float *y, int incy
+);
 float APPLY_VECTORIZATION_OPTIMIZED_FUNCTION(
     int n, const float *x, int incx, const float *y, int incy
 );
@@ -30,30 +37,40 @@ float APPLY_VECTORIZATION_OPTIMIZED_FUNCTION(
 static double run_kernel(
     float (*kernel)(int, const float *, int, const float *, int),
     int n,
+    int iters,
     const float *x,
     const float *y,
     float *result_out
 ) {
     double start = apply_vectorization_seconds();
-    float sink = 0.0f;
+    volatile float sink = 0.0f;
 
-    for (int iter = 0; iter < APPLY_VECTORIZATION_DOT_ITERS; ++iter) {
+    for (int iter = 0; iter < iters; ++iter) {
         sink += kernel(n, x, 1, y, 1);
     }
 
-    *result_out = sink;
-    return (apply_vectorization_seconds() - start)
-        / (double)APPLY_VECTORIZATION_DOT_ITERS;
+    *result_out = sink / (float)iters;
+    return (apply_vectorization_seconds() - start) / (double)iters;
 }
 
-int main(void) {
-    float *x = (float *)malloc(sizeof(float) * (size_t)APPLY_VECTORIZATION_DOT_N);
-    float *y = (float *)malloc(sizeof(float) * (size_t)APPLY_VECTORIZATION_DOT_N);
+int main(int argc, char **argv) {
+    const int n = apply_vectorization_arg_int(
+        argc, argv, "-n", APPLY_VECTORIZATION_DOT_N
+    );
+    const int iters = apply_vectorization_arg_int(
+        argc, argv, "-iters", APPLY_VECTORIZATION_DOT_ITERS
+    );
+    const float tolerance = APPLY_VECTORIZATION_DOT_TOLERANCE * (float)n;
+    float *x = (float *)malloc(sizeof(float) * (size_t)n);
+    float *y = (float *)malloc(sizeof(float) * (size_t)n);
     float baseline_value = 0.0f;
+    float autovec_value = 0.0f;
     float optimized_value = 0.0f;
     double baseline_seconds;
+    double autovec_seconds;
     double optimized_seconds;
-    float diff;
+    float autovec_diff;
+    float optimized_diff;
 
     if (x == NULL || y == NULL) {
         free(x);
@@ -61,32 +78,32 @@ int main(void) {
         return apply_vectorization_report_alloc_failure("cblas_sdot");
     }
 
-    apply_vectorization_fill_vector(x, APPLY_VECTORIZATION_DOT_N, 0.0625f);
-    apply_vectorization_fill_vector(y, APPLY_VECTORIZATION_DOT_N, 0.046875f);
+    apply_vectorization_fill_vector(x, n, 0.0625f);
+    apply_vectorization_fill_vector(y, n, 0.046875f);
 
     baseline_seconds = run_kernel(
-        APPLY_VECTORIZATION_BASELINE_FUNCTION,
-        APPLY_VECTORIZATION_DOT_N,
-        x,
-        y,
-        &baseline_value
+        APPLY_VECTORIZATION_BASELINE_FUNCTION, n, iters, x, y, &baseline_value
+    );
+    autovec_seconds = run_kernel(
+        APPLY_VECTORIZATION_AUTOVEC_FUNCTION, n, iters, x, y, &autovec_value
     );
     optimized_seconds = run_kernel(
-        APPLY_VECTORIZATION_OPTIMIZED_FUNCTION,
-        APPLY_VECTORIZATION_DOT_N,
-        x,
-        y,
-        &optimized_value
+        APPLY_VECTORIZATION_OPTIMIZED_FUNCTION, n, iters, x, y, &optimized_value
     );
 
-    diff = apply_vectorization_absf(baseline_value - optimized_value);
-    printf("基线结果=%.6f\n", baseline_value);
-    printf("优化结果=%.6f\n", optimized_value);
-    printf("最大绝对误差=%.8f\n", diff);
+    autovec_diff = apply_vectorization_absf(baseline_value - autovec_value);
+    optimized_diff = apply_vectorization_absf(baseline_value - optimized_value);
 
-    if (diff > APPLY_VECTORIZATION_DOT_TOLERANCE) {
-        apply_vectorization_print_summary(
+    printf("基线结果=%.6f\n", baseline_value);
+    printf("自动向量化结果=%.6f\n", autovec_value);
+    printf("优化结果=%.6f\n", optimized_value);
+    printf("自动向量化最大绝对误差=%.8f\n", autovec_diff);
+    printf("优化后最大绝对误差=%.8f\n", optimized_diff);
+
+    if (autovec_diff > tolerance || optimized_diff > tolerance) {
+        apply_vectorization_print_summary_three(
             baseline_seconds,
+            autovec_seconds,
             optimized_seconds,
             "失败",
             "dot mismatch"
@@ -96,8 +113,9 @@ int main(void) {
         return 2;
     }
 
-    apply_vectorization_print_summary(
+    apply_vectorization_print_summary_three(
         baseline_seconds,
+        autovec_seconds,
         optimized_seconds,
         "通过",
         "dot ok"
