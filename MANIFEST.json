@@ -19,7 +19,6 @@
     "src/original": "unoptimized scalar BLAS interface sources",
     "src/optimized/<arch>": "generated architecture-specific sources; SME sgemm uses a ZA tile implementation",
     "src/drivers": "correctness and scalar/autovec/optimized timing drivers",
-    "src/common/sme_abi_stubs.c": "weak fallback SME ABI support routines for standalone SME benchmark links",
     "scripts/build.sh": "compile scalar baseline, compiler-autovec, and optimized benchmark binaries",
     "scripts/run_compare.sh": "run scalar/autovec/optimized and existing goto binaries across hot sizes with the configured binding prefix, emit detail and summary tables"
   },

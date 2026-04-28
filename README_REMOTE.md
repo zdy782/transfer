@@ -9,9 +9,9 @@ This package contains eight single-precision BLAS interface cases, each with:
 - `src/optimized/sme/`: SME optimized source; `sgemm` uses an SME ZA tile path
 - `src/drivers/`: correctness and scalar/autovec/optimized timing drivers
 
-SME builds link a weak fallback object for SME ABI support routines such as
-`__arm_tpidr2_save`. A full platform/compiler-rt implementation overrides the
-fallback when present; the fallback is only for standalone benchmark binaries.
+The SME `sgemm` source includes weak fallback definitions for SME ABI support
+routines such as `__arm_tpidr2_save`; a full platform/compiler-rt
+implementation overrides them when present.
 
 Expected existing server binaries:
 

@@ -34,16 +34,7 @@ build_one_arch() {
   local arch_flags
   arch_flags="$(arch_flags_for "$target_arch")"
   local build_dir="$root_dir/build/$target_arch"
-  local sme_abi_stub_obj=""
   mkdir -p "$build_dir"
-
-  if [[ "$target_arch" == "sme" ]]; then
-    sme_abi_stub_obj="$build_dir/sme_abi_stubs.o"
-    # shellcheck disable=SC2086
-    "$cc_bin" $common_flags_default $arch_flags \
-      -c "$root_dir/src/common/sme_abi_stubs.c" \
-      -o "$sme_abi_stub_obj"
-  fi
 
   IFS=',' read -r -a case_names <<<"$cases_csv"
   for short_case in "${case_names[@]}"; do
@@ -79,24 +70,13 @@ build_one_arch() {
       -DAPPLY_VECTORIZATION_OPTIMIZED_FUNCTION="$optimized_symbol" \
       -c "$root_dir/src/drivers/${fn}_driver.c" \
       -o "$build_dir/${short_case}_driver.o"
-    if [[ -n "$sme_abi_stub_obj" ]]; then
-      # shellcheck disable=SC2086
-      "$cc_bin" $common_flags_default \
-        "$build_dir/${short_case}_baseline.o" \
-        "$build_dir/${short_case}_${target_arch}_autovec.o" \
-        "$build_dir/${short_case}_${target_arch}.o" \
-        "$build_dir/${short_case}_driver.o" \
-        "$sme_abi_stub_obj" \
-        -o "$build_dir/${short_case}.compare"
-    else
-      # shellcheck disable=SC2086
-      "$cc_bin" $common_flags_default \
-        "$build_dir/${short_case}_baseline.o" \
-        "$build_dir/${short_case}_${target_arch}_autovec.o" \
-        "$build_dir/${short_case}_${target_arch}.o" \
-        "$build_dir/${short_case}_driver.o" \
-        -o "$build_dir/${short_case}.compare"
-    fi
+    # shellcheck disable=SC2086
+    "$cc_bin" $common_flags_default \
+      "$build_dir/${short_case}_baseline.o" \
+      "$build_dir/${short_case}_${target_arch}_autovec.o" \
+      "$build_dir/${short_case}_${target_arch}.o" \
+      "$build_dir/${short_case}_driver.o" \
+      -o "$build_dir/${short_case}.compare"
   done
 }
 
