@@ -6,7 +6,7 @@ This package contains eight single-precision BLAS interface cases, each with:
 - compiler auto-vectorization build of the same scalar source for each target architecture
 - `src/optimized/neon/`: NEON optimized source
 - `src/optimized/sve/`: SVE optimized source
-- `src/optimized/sme/`: SME streaming optimized source
+- `src/optimized/sme/`: SME optimized source; `sgemm` uses an SME ZA tile path
 - `src/drivers/`: correctness and scalar/autovec/optimized timing drivers
 
 Expected existing server binaries:
