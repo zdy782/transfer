@@ -1,0 +1,109 @@
+library:
+  name: isa-l
+  description: "Intelligent Storage Acceleration Library"
+  platform: arm64
+  analyzed_at: "2026-04-27"
+  version: "master"
+
+metadata:
+  total_test_cases: 3
+  difficulty_distribution:
+    easy: 1
+    medium: 1
+    hard: 1
+
+test_cases:
+  - name: gf_vect_mul
+    perf_file: "erasure_code/gf_vect_mul_perf.c"
+    benchmark_source: official
+    difficulty: easy
+    target_function:
+      file: "erasure_code/aarch64/ec_aarch64_dispatcher.c"
+      name: gf_vect_mul
+      code_snippet: |
+        DEFINE_INTERFACE_DISPATCHER(gf_vect_mul)
+        {
+        #if defined(__linux__)
+                unsigned long auxval = getauxval(AT_HWCAP);
+
+                if (auxval & HWCAP_SVE)
+                        return gf_vect_mul_sve;
+                if (auxval & HWCAP_ASIMD)
+                        return gf_vect_mul_neon;
+        #elif defined(__APPLE__)
+                return gf_vect_mul_neon;
+        #endif
+                return gf_vect_mul_base;
+        }
+      arm_features:
+        - sve
+        - neon
+        - asimd
+    analysis:
+      reason: "Both SVE and NEON implementations already exist as hand-optimized assembly. The SVE variant is vector-length-agnostic with a clean whilelo/incb loop. The NEON variant uses fully unrolled 128-byte and 32-byte loop paths with 8-way TBL lookup. The algorithm (GF(2^8) multiply via split-nibble table lookup) is straightforward and both implementations are mature. Low difficulty for validation since both paths are well-exercised."
+      optimization_potential: "low"
+      suggested_improvements:
+        - "SVE variant could use ld1b/st1b with contiguous addressing instead of scatter-gather for sequential access patterns"
+        - "NEON 128-byte loop could pre-load next iteration data to hide load latency"
+
+  - name: isal_zero_detect
+    perf_file: "mem/mem_zero_detect_perf.c"
+    benchmark_source: official
+    difficulty: medium
+    target_function:
+      file: "mem/aarch64/mem_aarch64_dispatcher.c"
+      name: isal_zero_detect
+      code_snippet: |
+        DEFINE_INTERFACE_DISPATCHER(isal_zero_detect)
+        {
+        #if defined(__linux__)
+                unsigned long auxval = getauxval(AT_HWCAP);
+                if (auxval & HWCAP_ASIMD)
+                        return mem_zero_detect_neon;
+        #elif defined(__APPLE__)
+                return mem_zero_detect_neon;
+        #endif
+                return mem_zero_detect_base;
+        }
+      arm_features:
+        - neon
+        - asimd
+    analysis:
+      reason: "Only NEON implementation exists; no SVE variant is available. The NEON code performs OR-reduction across 24x16B blocks per iteration which is efficient but not vector-length-agnostic. A SVE implementation could use wider vectors (256/512-bit) and predicate-based tail handling for cleaner code and higher throughput on SVE-capable hardware. The algorithm itself is simple (OR all bytes, check zero) making this a medium difficulty task primarily requiring new SVE assembly."
+      optimization_potential: "medium"
+      suggested_improvements:
+        - "Add SVE implementation using whilelo-predicated ld1b/orr loop for vector-length-agnostic processing"
+        - "SVE variant could process 2x-4x more bytes per iteration on SVE-256/512 hardware"
+        - "Consider early-ex optimization: check partial OR result within the loop to skip remaining bytes on non-zero detection"
+
+  - name: crc32_ieee
+    perf_file: "crc/crc32_ieee_perf.c"
+    benchmark_source: official
+    difficulty: hard
+    target_function:
+      file: "crc/aarch64/crc_aarch64_dispatcher.c"
+      name: crc32_ieee
+      code_snippet: |
+        DEFINE_INTERFACE_DISPATCHER(crc32_ieee)
+        {
+        #if defined(__linux__)
+                unsigned long auxval = getauxval(AT_HWCAP);
+                if (auxval & HWCAP_PMULL) {
+                        return crc32_ieee_norm_pmull;
+                }
+        #elif defined(__APPLE__)
+                if (sysctlEnabled(SYSCTL_PMULL_KEY))
+                        return crc32_ieee_norm_pmull;
+        #endif
+                return crc32_ieee_base;
+        }
+      arm_features:
+        - arm_crypto
+        - pmull
+    analysis:
+      reason: "Uses ARMv8 Crypto Extensions carryless multiply (PMULL) for CRC folding. The implementation is complex: 1024-bit to 512-bit folding loop via pmull2/pmull with interleaved loads, then 512->128 bit reduction, 128->64 bit reduction, and Barrett reduction for final CRC. No SVE variant exists. Creating an SVE version is hard because SVE PMULL has different vector semantics (1q result per 2d input pair at variable vector length) and the folding constants must be recomputed for wider vectors. The algorithm is fundamentally carryless-multiply-based which requires careful polynomial arithmetic reasoning."
+      optimization_potential: "medium"
+      suggested_improvements:
+        - "Add SVE implementation using SVE pmull instructions for wider folding pipeline on SVE-256/512 hardware"
+        - "Consider combining PMULL with CRC32 hardware instruction (crc32w) for short-buffer fast path similar to crc32_iscsi dispatcher"
+        - "SVE2 eor3 instruction could reduce XOR chain depth in the folding reduction steps"

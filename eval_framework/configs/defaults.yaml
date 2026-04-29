@@ -1,0 +1,29 @@
+# Default configuration for all libraries
+library:
+  name: ""
+  description: ""
+  repo_path: ""
+
+build:
+  type: cmake  # autotools | cmake | meson | makefile
+  commands:
+    configure: ""
+    build: ""
+    test: ""
+
+test_discovery:
+  perf_test_patterns:
+    - "*_perf.c"
+    - "*_perf.cpp"
+    - "*bench*.c"
+    - "*bench*.cpp"
+    - "*benchmark*"
+  exclude_patterns:
+    - "*/test/*"
+    - "*/tests/*"
+    - "*/.git/*"
+  search_locations:
+    - "."
+
+benchmark_source: official  # official | third_party | mixed
+third_party_benchmarks: []

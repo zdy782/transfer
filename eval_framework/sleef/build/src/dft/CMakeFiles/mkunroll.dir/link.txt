@@ -1,0 +1,1 @@
+/usr/bin/cc  -Wall -Wno-unused-function -Wno-attributes -Wno-unused-result -Wno-psabi -fno-strict-aliasing -fvisibility=hidden -fopenmp -O3 -DNDEBUG CMakeFiles/mkunroll.dir/mkunroll.c.o -o ../../bin/mkunroll   -L/home/chenxuqiang/install/lib 

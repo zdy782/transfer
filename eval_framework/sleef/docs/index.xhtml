@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=0.4"/>
+<meta name="description" content="SLEEF implements vectorized C99 math functions." />
+<meta name="google" content="notranslate" />
+<link rel="canonical" href="https://sleef.org/" />
+<link rel="icon" href="favicon.png" />
+<link rel="stylesheet" type="text/css" href="texlike.css"/>
+<link rel="stylesheet" type="text/css" href="sleef.css"/>
+<title>SLEEF Vectorized Math Library</title>
+</head>
+<body translate="no" class="notranslate">
+<h1>SLEEF Vectorized Math Library<img src="sleef2025.png" alt="logo" width="25%" height="25%" style="float: right" /></h1>
+
+<ul class="none" style="font-family: arial, sansserif; margin-top: 1.0cm;">
+  <li><a class="underlined" style="color:#a00000;" href="https://github.com/shibatch/sleef/releases">Download the latest version</a></li>
+  <li><a class="underlined" href="https://sleef.org/">Latest documentation on the web</a></li>
+  <li><a class="underlined" href="https://github.com/shibatch/sleef">GitHub repository</a></li>
+  <li><a class="underlined" href="https://github.com/shibatch/sleef/discussions">Discussions</a></li>
+  <li><a class="underlined" href="https://github.com/shibatch/sleef/wiki">Wiki pages</a></li>
+</ul>
+
+<h2>Table of contents</h2>
+
+<ul class="none" style="font-family: arial, sansserif; padding-left: 0.5cm;">
+  <li><a class="underlined" href="index.xhtml">Introduction</a>
+    <ul class="disc">
+      <li><a href="index.xhtml#overview">Overview</a></li>
+      <li><a href="index.xhtml#environment">Supported environments</a></li>
+      <li><a href="index.xhtml#credit">Credit</a></li>
+      <li><a href="index.xhtml#license">License</a></li>
+      <li><a href="index.xhtml#history">History</a></li>
+      <li><a href="index.xhtml#related">Related projects</a></li>
+      <li><a href="index.xhtml#publication">Publication</a></li>
+    </ul>
+  </li>
+  <li>&nbsp;</li>
+  <li><a class="underlined" href="compile.xhtml">Compiling and installing the library</a></li>
+  <li><a class="underlined" href="purec.xhtml">Math library reference</a></li>
+  <li><a class="underlined" href="quad.xhtml"> Quad-precision math library reference</a></li>
+  <li><a class="underlined" href="dft.xhtml">DFT library reference</a></li>
+  <li><a class="underlined" href="misc.xhtml">Other tools included in the package</a></li>
+  <li><a class="underlined" href="benchmark.xhtml">Benchmark results</a></li>
+  <li><a class="underlined" href="additional.xhtml">Additional notes</a></li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p class="noindent">
+  SLEEF stands for SIMD Library for Evaluating Elementary
+  Functions. It implements manually <a class="underlined"
+  href="https://en.wikipedia.org/wiki/Automatic_vectorization">vectorized</a>
+  versions of all C99 real floating point math functions. It can
+  utilize SIMD instructions that are available on modern
+  processors. SLEEF is designed to effciently perform computation with
+  SIMD instructions by reducing the use of conditional branches and
+  scatter/gather memory access. Our <a class="underlined"
+  href="benchmark.xhtml">benchmarks</a> show that the performance of
+  SLEEF is comparable to that of the best commercial library.
+</p>
+
+<p>
+  Unlike closed-source commercial libraries, which are often
+  assembly-optimized, SLEEF is designed to work with various
+  architectures, operating systems and compilers. It is distributed
+  under <a class="underlined"
+  href="http://www.boost.org/users/license.html">the Boost Software
+  License</a>, which is a permissive open source license. SLEEF can be
+  easily ported to other architectures by writing a helper file, which
+  is a thin abstraction layer of SIMD intrinsics. SLEEF also
+  provides <a class="underlined"
+  href="additional.xhtml#dispatcher">dispatchers</a> that
+  automatically choose the best subroutines for the computer on which
+  the library is executed. In order to further optimize the
+  application code that calls SLEEF functions,
+  <a class="underlined" href="additional.xhtml#lto">link time
+  optimization(LTO)</a> can be used to reduce the overhead of
+  functions calls, and the build system of SLEEF supports usage of
+  LTO. The library also has a functionality to generate
+  <a class="underlined" href="additional.xhtml#inline">header
+  files</a> in which the library functions are all defined as inline
+  functions. SLEEF can be used for <a class="underlined"
+  href="cuda.xhtml">GPGPU</a> and <a class="underlined"
+  href="additional.xhtml#wasm">WebAssembly</a> with these header
+  files. In addition to the vectorized functions, SLEEF provides
+  scalar functions. Calls to these scalar SLEEF functions can be
+  <a class="underlined"
+  href="additional.xhtml#vectorizing">auto-vectorized</a> by GCC and
+  Clang. These functions return deterministic values across all
+  architectures. That is, they are designed to return exactly the same
+  value for the same argument even on different architectures.
+</p>
+
+<p>
+  The library contains implementations of all C99 real FP math
+  functions in double precision and single precision. Different
+  accuracy of the results can be chosen for a subset of the elementary
+  functions; for this subset there are versions with up to
+  1 <a class="underlined" href="additional.xhtml#ulp">ULP</a> error
+  (which is the maximum error, not the average) and even faster
+  versions with a few ULPs of error bounds. For non-finite inputs and
+  outputs, the functions return correct results as specified in the
+  C99 standard. All the functions in the library
+  are <a class="underlined" href="misc.xhtml#testerlibm">thoroughly
+  tested</a> and confirmed that the evaluation error is within the
+  designed limit by comparing the returned values against
+  high-precision evaluation using the GNU MPFR Library.
+</p>
+
+<p>
+  SLEEF also includes a <a class="underlined"
+  href="quad.xhtml">quad-precision math library</a>. This library
+  includes fully vectorized IEEE 754 quadruple-precision (QP)
+  functions that correspond to the standard C math functions. I/O
+  functions for converting between QP numbers and strings are also
+  available.
+</p>
+
+<br/>
+
+<p>
+  SLEEF includes a library of <a class="underlined"
+  href="dft.xhtml">discrete Fourier transform(DFT)</a>. It is fully
+  vectorized, heavily unrolled, and parallelized in such a way that
+  modern SIMD instructions and multiple cores can be utilized, and it
+  can utilize long vectors up to 2048 bits. It has an API similar to
+  that of FFTW for easy migration. The helper files for abstracting
+  SIMD intrinsics are shared with SLEEF libm, and thus it is easy to
+  port the DFT library to other architectures. <a class="underlined"
+  href="benchmark.xhtml#dft">Benchmark results of the DFT library</a>
+  are now available.
+</p>
+
+<h2 id="environment">Supported environments</h2>
+
+<p class="noindent">
+  This library supports the following architectures :
+</p>
+
+<div><br/></div>
+
+<ul class="disc">
+  <li><a class="underlined" href="x86.xhtml">x86</a> - SSE2, AVX2, AVX512F</li>
+  <li>RISC-V - RVV1, RVV2</li>
+  <li><a class="underlined" href="cuda.xhtml">CUDA</a></li>
+  <li><a class="underlined" href="aarch64.xhtml">AArch64</a> - Advanced SIMD</li>
+</ul>
+
+<div><br/></div>
+
+<p>
+  The supported combinations of the architecture, operating system and
+  compiler are shown in Table 1.1.
+</p>
+
+<div style="margin-top: 1.0cm;"></div>
+
+<table style="text-align:center;" align="center">
+  <tr align="center">
+    <td class="caption">Table 1.1: Environment support matrix</td>
+  </tr>
+  <tr align="center">
+    <td>
+      <table class="lt">
+        <tr>
+          <td class="lt-hl"></td>
+	  <td class="lt-hl"></td>
+          <td class="lt-hl"></td>
+          <td class="lt-hl"></td>
+          <td class="lt-hl"></td>
+        </tr>
+	<tr>
+	  <td class="lt-br"></td>
+	  <td class="lt-hl"></td>
+	  <td class="lt-blr" align="center">GCC</td>
+	  <td class="lt-br" align="center">Clang</td>
+	  <td class="lt-b" align="center">MSVC</td>
+	</tr>
+        <tr>
+          <td class="lt-hl"></td>
+	  <td class="lt-hl"></td>
+	  <td class="lt-hl"></td>
+          <td class="lt-hl"></td>
+          <td class="lt-hl"></td>
+        </tr>
+	<tr>
+	  <td class="lt-r" align="left">x86_64, Linux</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Supported</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">N/A</td>
+	</tr>
+	<tr>
+	  <td class="lt-r" align="left">x86_64, Windows</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Experimental(Cygwin)</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">Supported</td>
+	</tr>
+	<tr>
+	  <td class="lt-r" align="left">RISC-V (64-bit), Linux</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Supported</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">N/A</td>
+	</tr>
+	<tr>
+	  <td class="lt-r" align="left">PowerPC (64 bit), Linux</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Supported</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">N/A</td>
+	</tr>
+	<tr>
+	  <td class="lt-r" align="left">System/390 (64 bit), Linux</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Supported</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">N/A</td>
+	</tr>
+	<tr>
+	  <td class="lt-r" align="left">AArch64, Linux</td>
+	  <td></td>
+	  <td class="lt-lr" align="center">Supported</td>
+	  <td class="lt-r" align="center">Experimental</td>
+	  <td class="lt-" align="center">N/A</td>
+	</tr>
+	<tr>
+	  <td class="lt-br" align="left">AArch64, macOS</td>
+	  <td class="lt-hl"></td>
+	  <td class="lt-blr" align="center">Experimental</td>
+	  <td class="lt-br" align="center">Supported</td>
+	  <td class="lt-b" align="center">N/A</td>
+	</tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<div style="margin-top: 2.0cm;"></div>
+
+<p>
+  Supported compilers are only the latest versions of compilers
+  officially used on the OSes. All functions in the library are thread
+  safe unless otherwise noted.
+</p>
+  
+
+<h2 id="credit">Credit</h2>
+
+<ul class="disc">
+  <li>The main developer is <a class="underlined"
+  href="https://github.com/shibatch">Naoki Shibata</a>
+  ( <a href="mailto:shibatch@users.sourceforge.net">shibatch@users.sourceforge.net</a> ).</li>
+  <li><a class="underlined"
+  href="https://github.com/shibatch/sleef/graphs/contributors">
+  Other contributors are listed on GitHub.</a></li>
+</ul>
+
+<h2 id="license">License</h2>
+
+<p class="noindent">
+SLEEF is distributed under <a class="underlined"
+href="http://www.boost.org/LICENSE_1_0.txt">Boost Software License
+Version 1.0</a>. Contributions to this project
+from individual developers and small organizations are accepted under
+the same license. For contributions from corporate users, please refer
+to link: <a class="underlined"
+href="https://github.com/shibatch/sleef/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a>.
+</p>
+
+<h3
+id="building-a-sustainable-future-for-our-open-source-projects">Building
+a Sustainable Future for Our Open Source Projects</h3>
+
+<p class="noindent">We believe that Free and Open Source Software
+(FOSS) is a wonderful ecosystem that allows anyone to use software
+freely. However, to maintain and enhance its value over the long term,
+continuous maintenance and improvement are essential.</p>
+
+<br/>
+
+<p class="noindent">Like many FOSS projects, we face the challenge
+that long-term sustainability is difficult to achieve through the
+goodwill and efforts of developers alone. While the outputs of
+open-source projects are incorporated into the products of many
+companies and their value is rightfully recognized, the developers who
+create these outputs are not always treated as equal partners in the
+business world.</p>
+
+<br/>
+
+<p class="noindent">A license guarantees the “freedom to use,” but the
+spirit of the FOSS ecosystem is based on a culture of mutual respect
+and contribution built upon that freedom. We believe that accepting
+the “value” of a project’s output while unilaterally refusing dialogue
+with its creators simply because they are individuals undermines the
+sustainability of this ecosystem. Such companies should not turn a
+blind eye to the reality that someone must bear the costs to make the
+cycle sustainable.</p>
+
+<br/>
+
+<p class="noindent">This issue is not just about corporations; it
+reflects a deeper cultural expectation within the FOSS ecosystem
+itself. Over time, we have come to take for granted that everything in
+open source should be provided for free - not only the code, but also
+the ongoing effort to maintain and improve it. However, FOSS licenses
+guarantee the freedom to use and modify software; <strong>they do not
+impose an obligation on developers to offer perpetual, unpaid
+maintenance</strong>. When this distinction is overlooked, maintainers
+can end up burdened with work that was never meant to be an open-ended
+personal commitment. Such an imbalance not only discourages openness,
+but also undermines the sustainability of an ecosystem that has become
+a vital part of modern society.</p>
+
+<br/>
+
+<p class="noindent">To explain the phenomenon occurring across the
+entire ecosystem: Developers write code they find useful and release
+it as FOSS. It gains popularity, and soon large corporations
+incorporate it into their products, reaping substantial
+profits. Requests for new features and fixes flood in, yet no
+financial support accompanies them. Eventually, the maintainer
+realizes there is no personal or professional benefit in responding to
+these unpaid demands. The skills required to develop popular FOSS are
+often in high demand in other fields as well.  Ultimately, the
+maintainer burns out and the project is abandoned. This is the
+unsustainable cycle we are tackling.</p>
+
+<br/>
+
+<p class="noindent">Within this unsustainable cycle, adopting FOSS
+into products while fully aware of this situation is hardly beneficial
+for either companies or the society at large. To make the cycle
+sustainable, everyone must recognize the reality that someone must
+bear the costs, and these costs are equivalent to what companies would
+need to develop and maintain comparable products. This project
+specifically requests companies profiting from our deliverables to
+contribute to maintaining the project.</p>
+
+<br/>
+
+<p class="noindent">To be clear, <strong>this is not a request for
+charity</strong>; it is a proposal to manage the operational
+risk. This is a systemic challenge originating not from the
+developers, but from within the organizations that consume and whose
+business continuity depends on FOSS. Should a project be abandoned due
+to this unresolved problem,
+<strong>the primary victims will be you, the company</strong> that built
+its product on top of an unmaintained foundation, not the developers who
+can move on to other opportunities.</p>
+
+<h3 id="our-request-for-support">Our Request for Support</h3>
+
+<p class="noindent">We request ongoing financial support from
+organizations that incorporate our project’s deliverables into their
+products or services and derive <strong>annual revenue exceeding US $1
+million</strong> from those products and services, to help cover the
+costs of maintenance and the development of new features. While this
+support is not a legal obligation, let us be clear: the license is a
+grant of permission to use our work, not a service contract obligating
+us to provide perpetual, unpaid labor. We consider it a fundamental
+business principle that to profit from a critical dependency while
+contributing nothing to its stability is an extractive and
+unsustainable practice.</p>
+
+<br/>
+
+<p class="noindent">It is also crucial to recognize what “maintenance”
+truly entails. In a living software project, it is not merely about
+preserving the status quo of the current version. It is the continuous
+effort that leads to security patches, compatibility with new
+environments, and the very features that define future
+versions. Therefore, to claim satisfaction with an older version as a
+reason to decline support, while simultaneously benefiting from the
+ongoing development that produces newer, better versions, is a
+logically inconsistent position.</p>
+
+<br/>
+
+<p class="noindent">This support must not be intended to benefit any
+particular company, but must support maintaining the project as a
+shared infrastructure that
+<strong>benefits all users and the broader community</strong>.
+Furthermore, this threshold is designed so that <strong>individual
+developers, small-scale projects, and the majority of our users are not
+asked to pay</strong>, while seeking appropriate support from companies
+that derive significant value from our project.</p>
+
+<br/>
+
+<p class="noindent">We understand that corporate procurement processes
+were not designed with FOSS sustainability in mind. We are committed
+to finding a practical path forward, but your partnership is essential
+in structuring a financial relationship that aligns with your standard
+corporate procedures. We simply ask for fairness: do not demand
+contractual terms from maintainers that your own legal department
+would refuse to accept.  Our mutual goal is to treat this partnership
+as a conventional operational expense, removing your internal barriers
+and making sustainability a straightforward business practice.</p>
+
+<br/>
+
+<p class="noindent">Our goal is to maintain this project stably over
+the long term and make it even more valuable for all users. In an
+industry where many projects are forced to abandon FOSS licenses, our
+preference is to continue offering this project under a true
+open-source license.  However, the long-term viability of this
+FOSS-first approach depends directly on the willingness of our
+commercial beneficiaries to invest in the ecosystem they rely on. We
+hope our collaborative approach can contribute to shaping a more
+balanced and enduring future for FOSS.</p>
+
+<br/>
+
+<p class="noindent">For details, please see our <a class="underlined"
+href="https://github.com/shibatch/nofreelunch?tab=coc-ov-file">Code of
+Conduct</a> or its <a class="underlined"
+href="https://youtu.be/wsh2yKGwK4s">introduction video</a>.</p>
+
+<h2 id="history">History</h2>
+
+<p class="noindent" style="margin-top: 1.0cm;">
+See <a class="underlined"
+href="https://github.com/shibatch/sleef/blob/master/CHANGELOG.adoc">Changelog</a>
+for a full history of changes to SLEEF.</p>
+
+
+<h2 id="publication">Publication</h2>
+
+<ul class="disc">
+  <li>Naoki Shibata and Francesco Petrogalli : <B>SLEEF: A Portable Vectorized Library of C Standard Mathematical Functions,</B> <I>in IEEE Transactions on Parallel and Distributed Systems,</I> <a class="underlined" href="https://doi.org/10.1109/TPDS.2019.2960333">DOI:10.1109/TPDS.2019.2960333</a> (Dec. 2019). [<a class="underlined" href="https://arxiv.org/pdf/2001.09258">PDF</a>]</li>
+</ul>
+
+<p class="footer">
+  Copyright &copy; 2010-2025 SLEEF Project, Naoki Shibata and contributors.<br/>
+  SLEEF is open-source software and is distributed under the Boost Software License, Version 1.0.
+</p>
+
+<script type="text/javascript">
+var sc_project=13098265; 
+var sc_invisible=1; 
+var sc_security="518de45e"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async="async"></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="https://c.statcounter.com/13098265/0/518de45e/1/"
+alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></img></a></div></noscript>
+
+
+</body>
+</html>

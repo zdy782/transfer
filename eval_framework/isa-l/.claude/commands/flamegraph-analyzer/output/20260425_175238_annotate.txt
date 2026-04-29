@@ -1,0 +1,398 @@
+=== Source Annotation Report ===
+Generated: Sat Apr 25 05:52:45 PM CST 2026
+Perf data: /home/chenxuqiang/eval_framework/isa-l/.claude/commands/flamegraph-analyzer/output/20260425_175238_cpu_raw.perf
+
+--- Function: ptep_clear_flush ---
+ Percent |	Source code & Disassembly of kcore for cpu-clock (2 samples, percent: local period)
+---------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section load0:
+         :
+         : 5                ffffa87323a8a3e8 <load0>:
+    0.00 :   ffffa87323a8a3e8:       mov     x9, x30
+    0.00 :   ffffa87323a8a3ec:       nop
+    0.00 :   ffffa87323a8a3f0:       paciasp
+    0.00 :   ffffa87323a8a3f4:       stp     x29, x30, [sp, #-64]!
+    0.00 :   ffffa87323a8a3f8:       mov     x29, sp
+    0.00 :   ffffa87323a8a3fc:       stp     x19, x20, [sp, #16]
+    0.00 :   ffffa87323a8a400:       mov     x20, x0
+    0.00 :   ffffa87323a8a404:       mov     x0, #0x1                        // #1
+    0.00 :   ffffa87323a8a408:       stp     x21, x22, [sp, #32]
+    0.00 :   ffffa87323a8a40c:       mov     x19, x2
+    0.00 :   ffffa87323a8a410:       mov     x21, x1
+    0.00 :   ffffa87323a8a414:       str     x23, [sp, #48]
+    0.00 :   ffffa87323a8a418:       movk    x0, #0x10, lsl #48
+    0.00 :   ffffa87323a8a41c:       ldr     x3, [x2]
+    0.00 :   ffffa87323a8a420:       ldr     x23, [x20, #16]
+    0.00 :   ffffa87323a8a424:       bics    xzr, x0, x3
+    0.00 :   ffffa87323a8a428:       b.eq    0xffffa87323a8a4e8  // b.none
+    0.00 :   ffffa87323a8a42c:       mov     x2, #0x0                        // #0
+    0.00 :   ffffa87323a8a430:       swp     x2, x22, [x19]
+    0.00 :   ffffa87323a8a434:       nop
+    0.00 :   ffffa87323a8a438:       nop
+    0.00 :   ffffa87323a8a43c:       nop
+    0.00 :   ffffa87323a8a440:       ldr     w0, [x23, #1076]
+    0.00 :   ffffa87323a8a444:       cbz     w0, 0xffffa87323a8a4a4
+    0.00 :   ffffa87323a8a448:       and     x0, x22, #0x7ffffffffffffff
+    0.00 :   ffffa87323a8a44c:       and     x0, x0, #0xfc00000000000001
+    0.00 :   ffffa87323a8a450:       cbz     x0, 0xffffa87323a8a488
+    0.00 :   ffffa87323a8a454:       ldr     x0, [x20, #16]
+    0.00 :   ffffa87323a8a458:       dsb     ishst
+    0.00 :   ffffa87323a8a45c:       ldr     x1, [x0, #960]
+    0.00 :   ffffa87323a8a460:       ubfx    x2, x21, #12, #44
+    0.00 :   ffffa87323a8a464:       orr     x1, x2, x1, lsl #48
+    0.00 :   ffffa87323a8a468:       tlbi    vale1is, x1
+    0.00 :   ffffa87323a8a46c:       nop
+    0.00 :   ffffa87323a8a470:       nop
+    0.00 :   ffffa87323a8a474:       nop
+    0.00 :   ffffa87323a8a478:       nop
+    0.00 :   ffffa87323a8a47c:       ldr     x1, [x0, #1048]
+    0.00 :   ffffa87323a8a480:       cbnz    x1, 0xffffa87323a8a4d4
+    0.00 :   ffffa87323a8a484:       dsb     ish
+  100.00 :   ffffa87323a8a488:       ldp     x19, x20, [sp, #16]
+    0.00 :   ffffa87323a8a48c:       mov     x0, x22
+
+--- Function: [ld-linux-aarch64.so.1] ---
+
+--- Function: kmem_cache_alloc ---
+ Percent |	Source code & Disassembly of kcore for cpu-clock (2 samples, percent: local period)
+---------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section load0:
+         :
+         : 5                ffffa87323aec880 <load0>:
+    0.00 :   ffffa87323aec880:       mov     x9, x30
+    0.00 :   ffffa87323aec884:       nop
+    0.00 :   ffffa87323aec888:       paciasp
+    0.00 :   ffffa87323aec88c:       stp     x29, x30, [sp, #-80]!
+    0.00 :   ffffa87323aec890:       mov     x29, sp
+    0.00 :   ffffa87323aec894:       stp     x25, x26, [sp, #64]
+    0.00 :   ffffa87323aec898:       adrp    x26, 0xffffa87325530000
+    0.00 :   ffffa87323aec89c:       stp     x19, x20, [sp, #16]
+    0.00 :   ffffa87323aec8a0:       mov     x19, x0
+    0.00 :   ffffa87323aec8a4:       ldr     w20, [x26, #3728]
+    0.00 :   ffffa87323aec8a8:       stp     x21, x22, [sp, #32]
+    0.00 :   ffffa87323aec8ac:       mov     x22, x30
+    0.00 :   ffffa87323aec8b0:       mov     w21, w1
+    0.00 :   ffffa87323aec8b4:       xpaclri
+    0.00 :   ffffa87323aec8b8:       stp     x23, x24, [sp, #48]
+    0.00 :   ffffa87323aec8bc:       and     w20, w1, w20
+    0.00 :   ffffa87323aec8c0:       mov     x23, x30
+    0.00 :   ffffa87323aec8c4:       ldr     w24, [x0, #28]
+    0.00 :   ffffa87323aec8c8:       b       0xffffa87323aecaa4
+    0.00 :   ffffa87323aec8cc:       tbnz    w20, #22, 0xffffa87323aec8d8
+    0.00 :   ffffa87323aec8d0:       ldr     w0, [x0, #8]
+    0.00 :   ffffa87323aec8d4:       tbz     w0, #26, 0xffffa87323aecaa4
+    0.00 :   ffffa87323aec8d8:       bl      0xffffa87323b1c490
+    0.00 :   ffffa87323aec8dc:       mov     x25, x0
+    0.00 :   ffffa87323aec8e0:       cbz     x0, 0xffffa87323aecaa4
+    0.00 :   ffffa87323aec8e4:       ldr     w2, [x19, #24]
+    0.00 :   ffffa87323aec8e8:       mov     w1, w20
+    0.00 :   ffffa87323aec8ec:       add     x2, x2, #0x8
+    0.00 :   ffffa87323aec8f0:       bl      0xffffa87323b1cc48
+    0.00 :   ffffa87323aec8f4:       cbnz    w0, 0xffffa87323aecb10
+    0.00 :   ffffa87323aec8f8:       cbz     x19, 0xffffa87323aecb10
+    0.00 :   ffffa87323aec8fc:       ldr     x1, [x19]
+    0.00 :   ffffa87323aec900:       mrs     x0, tpidr_el2
+    0.00 :   ffffa87323aec904:       add     x4, x1, x0
+    0.00 :   ffffa87323aec908:       ldr     x5, [x4, #8]
+    0.00 :   ffffa87323aec90c:       ldr     x2, [x4, #16]
+    0.00 :   ffffa87323aec910:       add     x3, x5, #0x1
+    0.00 :   ffffa87323aec914:       ldr     x20, [x1, x0]
+    0.00 :   ffffa87323aec918:       cmp     x2, #0x0
+    0.00 :   ffffa87323aec91c:       ccmp    x20, #0x0, #0x4, ne     // ne = any
+    0.00 :   ffffa87323aec920:       b.eq    0xffffa87323aecc0c  // b.none
+    0.00 :   ffffa87323aec924:       ldr     w0, [x19, #40]
+
+--- Function: __handle_mm_fault ---
+ Percent |	Source code & Disassembly of kcore for cpu-clock (1 samples, percent: local period)
+---------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section load0:
+         :
+         : 5                ffffa87323a75d20 <load0>:
+    0.00 :   ffffa87323a75d20:       mov     x9, x30
+    0.00 :   ffffa87323a75d24:       nop
+    0.00 :   ffffa87323a75d28:       paciasp
+    0.00 :   ffffa87323a75d2c:       sub     sp, sp, #0xe0
+    0.00 :   ffffa87323a75d30:       mrs     x3, sp_el0
+    0.00 :   ffffa87323a75d34:       stp     x29, x30, [sp, #144]
+    0.00 :   ffffa87323a75d38:       add     x29, sp, #0x90
+    0.00 :   ffffa87323a75d3c:       stp     x19, x20, [sp, #160]
+    0.00 :   ffffa87323a75d40:       mov     x20, x0
+    0.00 :   ffffa87323a75d44:       mov     x19, x1
+    0.00 :   ffffa87323a75d48:       stp     x21, x22, [sp, #176]
+    0.00 :   ffffa87323a75d4c:       mov     w1, #0x0                        // #0
+    0.00 :   ffffa87323a75d50:       mov     w21, w2
+    0.00 :   ffffa87323a75d54:       stp     x23, x24, [sp, #192]
+    0.00 :   ffffa87323a75d58:       mov     x2, #0x80                       // #128
+    0.00 :   ffffa87323a75d5c:       str     x25, [sp, #208]
+    0.00 :   ffffa87323a75d60:       ldr     x0, [x3, #2088]
+    0.00 :   ffffa87323a75d64:       str     x0, [sp, #136]
+    0.00 :   ffffa87323a75d68:       mov     x0, #0x0                        // #0
+    0.00 :   ffffa87323a75d6c:       add     x0, sp, #0x8
+    0.00 :   ffffa87323a75d70:       bl      0xffffa873244e3980
+    0.00 :   ffffa87323a75d74:       ldr     x0, [x20, #136]
+    0.00 :   ffffa87323a75d78:       str     x20, [sp]
+    0.00 :   ffffa87323a75d7c:       mov     w1, #0xcc0                      // #3264
+    0.00 :   ffffa87323a75d80:       cbz     x0, 0xffffa87323a75d90
+    0.00 :   ffffa87323a75d84:       ldr     x0, [x0, #216]
+    0.00 :   ffffa87323a75d88:       ldr     w1, [x0, #64]
+    0.00 :   ffffa87323a75d8c:       orr     w1, w1, #0xc0
+    0.00 :   ffffa87323a75d90:       ldr     x24, [x20, #16]
+    0.00 :   ffffa87323a75d94:       ubfx    x23, x19, #39, #9
+    0.00 :   ffffa87323a75d98:       ldr     x0, [x20]
+    0.00 :   ffffa87323a75d9c:       and     x2, x19, #0xfffffffffffff000
+    0.00 :   ffffa87323a75da0:       ldr     x3, [x20, #128]
+    0.00 :   ffffa87323a75da4:       sub     x0, x19, x0
+    0.00 :   ffffa87323a75da8:       ldr     x22, [x24, #112]
+    0.00 :   ffffa87323a75dac:       str     w1, [sp, #8]
+    0.00 :   ffffa87323a75db0:       add     x0, x3, x0, lsr #12
+    0.00 :   ffffa87323a75db4:       str     x0, [sp, #16]
+    0.00 :   ffffa87323a75db8:       str     x2, [sp, #24]
+    0.00 :   ffffa87323a75dbc:       str     x19, [sp, #32]
+    0.00 :   ffffa87323a75dc0:       adds    x1, x22, x23, lsl #3
+    0.00 :   ffffa87323a75dc4:       str     w21, [sp, #40]
+
+--- Function: __pmd_alloc ---
+ Percent |	Source code & Disassembly of kcore for cpu-clock (1 samples, percent: local period)
+---------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section load0:
+         :
+         : 5                ffffa87323a72918 <load0>:
+    0.00 :   ffffa87323a72918:       mov     x9, x30
+    0.00 :   ffffa87323a7291c:       nop
+    0.00 :   ffffa87323a72920:       paciasp
+    0.00 :   ffffa87323a72924:       stp     x29, x30, [sp, #-64]!
+    0.00 :   ffffa87323a72928:       mov     w2, #0xdc0                      // #3520
+    0.00 :   ffffa87323a7292c:       mov     x29, sp
+    0.00 :   ffffa87323a72930:       stp     x19, x20, [sp, #16]
+    0.00 :   ffffa87323a72934:       adrp    x20, 0xffffa8732594e000
+    0.00 :   ffffa87323a72938:       add     x20, x20, #0x580
+    0.00 :   ffffa87323a7293c:       cmp     x0, x20
+    0.00 :   ffffa87323a72940:       movk    w2, #0x44, lsl #16
+    0.00 :   ffffa87323a72944:       stp     x21, x22, [sp, #32]
+    0.00 :   ffffa87323a72948:       mov     x22, x0
+    0.00 :   ffffa87323a7294c:       mov     w0, #0xdc0                      // #3520
+    0.00 :   ffffa87323a72950:       mov     x21, x1
+    0.00 :   ffffa87323a72954:       movk    w0, #0x4, lsl #16
+    0.00 :   ffffa87323a72958:       mov     w1, #0x0                        // #0
+    0.00 :   ffffa87323a7295c:       csel    w0, w2, w0, ne  // ne = any
+    0.00 :   ffffa87323a72960:       bl      0xffffa87323ad81e0
+    0.00 :   ffffa87323a72964:       cbz     x0, 0xffffa87323a72ba8
+    0.00 :   ffffa87323a72968:       mov     x19, x0
+    0.00 :   ffffa87323a7296c:       str     x23, [sp, #48]
+    0.00 :   ffffa87323a72970:       mov     w2, #0x1                        // #1
+    0.00 :   ffffa87323a72974:       ldr     w0, [x0, #48]
+    0.00 :   ffffa87323a72978:       ldr     x1, [x19]
+    0.00 :   ffffa87323a7297c:       and     w0, w0, #0xfffffdff
+    0.00 :   ffffa87323a72980:       str     xzr, [x19, #16]
+    0.00 :   ffffa87323a72984:       str     wzr, [x19, #40]
+    0.00 :   ffffa87323a72988:       str     w0, [x19, #48]
+    0.00 :   ffffa87323a7298c:       tbz     w1, #6, 0xffffa87323a72994
+    0.00 :   ffffa87323a72990:       ldr     w2, [x19, #100]
+    0.00 :   ffffa87323a72994:       nop
+    0.00 :   ffffa87323a72998:       mrs     x23, daif
+    0.00 :   ffffa87323a7299c:       msr     daifset, #0x3
+    0.00 :   ffffa87323a729a0:       mov     x0, x19
+    0.00 :   ffffa87323a729a4:       mov     w1, #0x26                       // #38
+    0.00 :   ffffa87323a729a8:       bl      0xffffa87323b184e8
+    0.00 :   ffffa87323a729ac:       nop
+    0.00 :   ffffa87323a729b0:       msr     daif, x23
+    0.00 :   ffffa87323a729b4:       mov     x0, #0x40000000000              // #4398046511104
+    0.00 :   ffffa87323a729b8:       add     x19, x19, x0
+    0.00 :   ffffa87323a729bc:       mov     x0, #0xffff000000000000         // #-281474976710656
+
+--- Function: gf_vect_mul_init@plt ---
+ Percent |	Source code & Disassembly of lt-gf_vect_mul_perf for cpu-clock (28 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .plt:
+         :
+         : 5      0000000000400880 <gf_vect_mul_init@plt>:
+   14.29 :   400880: adrp    x16, 420000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   400884: ldr     x17, [x16, #8]
+    0.00 :   400888: add     x16, x16, #0x8
+   85.71 :   40088c: br      x17
+
+--- Function: main ---
+ Percent |	Source code & Disassembly of lt-gf_vect_mul_perf for cpu-clock (61 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .text:
+         :
+         : 5      0000000000400980 <main>:
+         : 6      main():
+         : 67     gf_vect_mul(TEST_LEN, gf_const_tbl, buff1, buff2);
+         : 68     }
+         :
+         : 70     int
+         : 71     main(int argc, char *argv[])
+         : 72     {
+    0.00 :   400980: sub     sp, sp, #0x100
+    0.00 :   400984: adrp    x0, 41f000 <__FRAME_END__+0x1dd68>
+    0.00 :   400988: add     x0, x0, #0xdc0
+    0.00 :   40098c: stp     x29, x30, [sp, #144]
+    0.00 :   400990: add     x29, sp, #0x90
+    0.00 :   400994: stp     x25, x26, [sp, #208]
+    0.00 :   400998: ldr     x1, [x0]
+    0.00 :   40099c: str     x1, [sp, #136]
+    0.00 :   4009a0: mov     x1, #0x0                        // #0
+         : 82     printf():
+         : 86     }
+         :
+         : 88     __fortify_function int
+         : 89     printf (const char *__restrict __fmt, ...)
+         : 90     {
+         : 91     return __printf_chk (__USE_FORTIFY_LEVEL - 1, __fmt, __va_arg_pack ());
+    0.00 :   4009a4: adrp    x0, 400000 <__abi_tag-0x278>
+    0.00 :   4009a8: add     x0, x0, #0xfb0
+    0.00 :   4009ac: bl      400900 <puts@plt>
+         : 95     main():
+         : 74     struct perf start;
+         :
+         : 76     printf("gf_vect_mul_perf:\n");
+         :
+         : 78     // Allocate large mem region
+         : 79     if (posix_memalign((void **) &buff1, 32, TEST_LEN) ||
+    0.00 :   4009b0: mov     x0, sp
+    0.00 :   4009b4: mov     x2, #0x2000                     // #8192
+    0.00 :   4009b8: mov     x1, #0x20                       // #32
+    0.00 :   4009bc: bl      4008c0 <posix_memalign@plt>
+    0.00 :   4009c0: cbnz    w0, 4009e8 <main+0x68>
+         : 75     posix_memalign((void **) &buff2, 32, TEST_LEN)) {
+    0.00 :   4009c4: add     x0, sp, #0x8
+    0.00 :   4009c8: mov     x2, #0x2000                     // #8192
+    0.00 :   4009cc: mov     x1, #0x20                       // #32
+
+--- Function: gf_vect_mul@plt ---
+ Percent |	Source code & Disassembly of lt-gf_vect_mul_perf for cpu-clock (11 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3      Disassembly of section .plt:
+         :
+         : 5      0000000000400940 <gf_vect_mul@plt>:
+   45.45 :   400940: adrp    x16, 420000 <__libc_start_main@GLIBC_2.34>
+    0.00 :   400944: ldr     x17, [x16, #104]
+    0.00 :   400948: add     x16, x16, #0x68
+   54.55 :   40094c: br      x17
+
+--- Function: gf_vect_mul_sve ---
+ Percent |	Source code & Disassembly of libisal.so.2.0.32 for cpu-clock (3445 samples, percent: local period)
+------------------------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3     Disassembly of section .text:
+         :
+         : 5     00000000000198c0 <gf_vect_mul_sve>:
+         : 6     gf_vect_mul_sve():
+         : 86    q_gft1_lo       .req    q6
+         : 87    q_gft1_hi       .req    q7
+         :
+         : 89    cdecl(gf_vect_mul_sve):
+         : 90    /* len not aligned to 32B, return_fail */
+         : 91    and     x_tmp, x_len, #0x1f
+    0.52 :   198c0:  and     x4, x0, #0x1f
+         : 87    cmp     x_tmp, #0
+    0.00 :   198c4:  cmp     x4, #0x0
+         : 88    bne     .return_fail
+    0.00 :   198c8:  b.ne    1990c <.return_fail>  // b.any
+         :
+         : 91    mov     z_mask0f.b, #0x0f               /* z_mask0f = 0x0F0F...0F */
+    0.03 :   198cc:  mov     z0.b, #15
+         : 91    mov     x_pos, #0
+    0.00 :   198d0:  mov     x5, #0x0                        // #0
+         :
+         : 95    /* Load with NEON instruction ldp */
+         : 96    ldp     q_gft1_lo, q_gft1_hi, [x_tbl]
+    0.00 :   198d4:  ldp     q6, q7, [x1]
+         :
+         : 99    /* vector length agnostic */
+         : 100   .Lloopsve_vl:
+         : 101   whilelo p0.b, x_pos, x_len
+    0.49 :   198d8:  whilelo p0.b, x5, x0
+         : 99    b.eq    .return_pass
+    2.79 :   198dc:  b.eq    19904 <.return_pass>  // b.none
+         :
+         : 103   /* load src data, governed by p0 */
+         : 104   ld1b    z_src.b,  p0/z, [x_src, x_pos]
+    2.29 :   198e0:  ld1b    {z1.b}, p0/z, [x2, x5]
+         :
+         : 106   /* split 4-bit lo; 4-bit hi */
+         : 107   and     z_src_lo.d, z_src.d, z_mask0f.d
+    0.00 :   198e4:  and     z2.d, z1.d, z0.d
+         : 106   lsr     z_src_hi.b, z_src.b, #4
+   62.06 :   198e8:  lsr     z1.b, z1.b, #4
+         :
+         : 110   /* table indexing, ie. gf(2^8) multiplication */
+         : 111   tbl     z_tmp1_lo.b, {z_gft1_lo.b}, z_src_lo.b
+    0.00 :   198ec:  tbl     z4.b, {z6.b}, z2.b
+
+--- Function: xfs_buf_get_map ---
+ Percent |	Source code & Disassembly of kcore for cpu-clock (1 samples, percent: local period)
+---------------------------------------------------------------------------------------------------
+         :
+         :
+         :
+         : 3                Disassembly of section load0:
+         :
+         : 5                ffffa872e9b56fd0 <load0>:
+    0.00 :   ffffa872e9b56fd0:       mov     x9, x30
+    0.00 :   ffffa872e9b56fd4:       nop
+    0.00 :   ffffa872e9b56fd8:       paciasp
+    0.00 :   ffffa872e9b56fdc:       sub     sp, sp, #0x80
+    0.00 :   ffffa872e9b56fe0:       mrs     x5, sp_el0
+    0.00 :   ffffa872e9b56fe4:       stp     x29, x30, [sp, #32]
+    0.00 :   ffffa872e9b56fe8:       add     x29, sp, #0x20
+    0.00 :   ffffa872e9b56fec:       stp     x19, x20, [sp, #48]
+    0.00 :   ffffa872e9b56ff0:       mov     w20, w2
+    0.00 :   ffffa872e9b56ff4:       stp     x21, x22, [sp, #64]
+    0.00 :   ffffa872e9b56ff8:       mov     x21, x0
+    0.00 :   ffffa872e9b56ffc:       mov     w22, w3
+    0.00 :   ffffa872e9b57000:       stp     x23, x24, [sp, #80]
+    0.00 :   ffffa872e9b57004:       mov     x23, x30
+    0.00 :   ffffa872e9b57008:       mov     x24, x4
+    0.00 :   ffffa872e9b5700c:       stp     x25, x26, [sp, #96]
+    0.00 :   ffffa872e9b57010:       mov     x25, x1
+    0.00 :   ffffa872e9b57014:       ldr     x1, [x5, #2088]
+    0.00 :   ffffa872e9b57018:       str     x1, [sp, #24]
+    0.00 :   ffffa872e9b5701c:       mov     x1, #0x0                        // #0
+    0.00 :   ffffa872e9b57020:       str     xzr, [sp, #16]
+    0.00 :   ffffa872e9b57024:       ldr     x26, [x25]
+    0.00 :   ffffa872e9b57028:       cmp     w2, #0x0
+    0.00 :   ffffa872e9b5702c:       b.le    0xffffa872e9b5747c
+    0.00 :   ffffa872e9b57030:       add     x7, x25, w2, sxtw #4
+    0.00 :   ffffa872e9b57034:       add     x5, x25, #0x8
+    0.00 :   ffffa872e9b57038:       add     x7, x7, #0x8
+    0.00 :   ffffa872e9b5703c:       mov     w19, #0x0                       // #0
+    0.00 :   ffffa872e9b57040:       ldr     w6, [x5], #16
+    0.00 :   ffffa872e9b57044:       add     w19, w19, w6
+    0.00 :   ffffa872e9b57048:       cmp     x5, x7
+    0.00 :   ffffa872e9b5704c:       b.ne    0xffffa872e9b57040  // b.any
+    0.00 :   ffffa872e9b57050:       ldr     x0, [x21, #40]
+    0.00 :   ffffa872e9b57054:       cmp     x26, #0x0
+    0.00 :   ffffa872e9b57058:       ldr     x5, [x0, #8]
+    0.00 :   ffffa872e9b5705c:       ldrb    w2, [x0, #461]
+    0.00 :   ffffa872e9b57060:       lsl     x5, x5, x2
+    0.00 :   ffffa872e9b57064:       ccmp    x26, x5, #0x0, ge       // ge = tcont
+    0.00 :   ffffa872e9b57068:       b.ge    0xffffa872e9b57504  // b.tcont
+    0.00 :   ffffa872e9b5706c:       stp     x27, x28, [sp, #112]
+    0.00 :   ffffa872e9b57070:       asr     x2, x26, x2
+    0.00 :   ffffa872e9b57074:       ldr     w1, [x0, #84]
+

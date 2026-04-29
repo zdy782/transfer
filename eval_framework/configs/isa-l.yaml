@@ -1,0 +1,26 @@
+library:
+  name: isa-l
+  description: "Intelligent Storage Acceleration Library"
+  repo_path: /data/chenxuqiang/eval_framework/isa-l
+
+build:
+  type: autotools
+  commands:
+    configure: ./autogen.sh && ./configure
+    build: make -j$(nproc)
+    test: make check
+
+test_discovery:
+  perf_test_patterns:
+    - "*_perf.c"
+  exclude_patterns:
+    - "*/test/*"
+    - "*/tests/*"
+  search_locations:
+    - erasure_code/
+    - crc/
+    - raid/
+    - igzip/
+    - mem/
+
+benchmark_source: official

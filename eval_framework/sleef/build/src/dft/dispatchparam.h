@@ -1,0 +1,6 @@
+#define MAXBUTWIDTHALL 4
+#define MINSHIFTALL 1
+#define MAXSHIFTALL 1
+#define CONFIGMAX 4
+#define ISAMAX 2
+

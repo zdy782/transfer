@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/CMakeFiles/ext_tlfloat"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/CMakeFiles/ext_tlfloat.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/CMakeFiles/ext_tlfloat-complete.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-build.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-configure.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-download.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-install.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-mkdir.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-patch_disconnected.rule"
+		},
+		{
+			"file" : "/data/chenxuqiang/eval_framework/sleef/build/ext_tlfloat-prefix/src/ext_tlfloat-stamp/ext_tlfloat-update_disconnected.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"ext_tlfloat"
+		],
+		"name" : "ext_tlfloat"
+	}
+}

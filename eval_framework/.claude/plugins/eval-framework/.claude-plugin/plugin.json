@@ -1,0 +1,9 @@
+{
+  "name": "eval-framework",
+  "version": "1.0.0",
+  "description": "AI Agent performance optimization evaluation framework for ARM platforms",
+  "author": {
+    "name": "eval-framework-team"
+  },
+  "keywords": ["evaluation", "arm", "performance", "optimization", "benchmark"]
+}

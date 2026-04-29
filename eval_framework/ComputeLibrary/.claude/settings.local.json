@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(scons --help)",
+      "Bash(./build/release/arm_compute_benchmark --help)",
+      "Bash(./build/release/Release/arm_compute_benchmark --help)",
+      "Bash(./build/release/Release/arm_compute_benchmark --list-tests)",
+      "Bash(./build/release/Release/arm_compute_benchmark *)",
+      "Bash(cmake --build build/release --config Release --target arm_compute_validation)"
+    ]
+  }
+}

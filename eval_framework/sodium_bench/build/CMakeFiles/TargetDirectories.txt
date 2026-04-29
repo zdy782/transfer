@@ -1,0 +1,3 @@
+/data/chenxuqiang/eval_framework/sodium_bench/build/CMakeFiles/sodium_bench.dir
+/data/chenxuqiang/eval_framework/sodium_bench/build/CMakeFiles/edit_cache.dir
+/data/chenxuqiang/eval_framework/sodium_bench/build/CMakeFiles/rebuild_cache.dir

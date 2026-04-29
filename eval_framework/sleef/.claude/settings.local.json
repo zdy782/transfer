@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cmake .. -DSLEEF_BUILD_DFT=ON -DSLEEF_BUILD_TESTS=ON)"
+    ]
+  }
+}

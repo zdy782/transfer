@@ -1,0 +1,9 @@
+/usr/local/lib64/libtlfloat.a
+/usr/local/include/tlfloat/bigint.hpp
+/usr/local/include/tlfloat/rpitab.hpp
+/usr/local/include/tlfloat/tlfloat.hpp
+/usr/local/include/tlfloat/tlmath.hpp
+/usr/local/include/tlfloat/tlmathcoef.hpp
+/usr/local/include/tlfloat/tlfloat.h
+/usr/local/include/tlfloat/tlfloatconfig.hpp
+/usr/local/lib64/pkgconfig/tlfloat.pc

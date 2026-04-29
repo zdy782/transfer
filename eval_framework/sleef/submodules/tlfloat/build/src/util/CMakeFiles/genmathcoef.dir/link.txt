@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -fcompare-debug-second -fconstexpr-ops-limit=1000000000 -fno-math-errno -O3 -DNDEBUG CMakeFiles/genmathcoef.dir/genmathcoef.cpp.o -o ../../bin/genmathcoef 

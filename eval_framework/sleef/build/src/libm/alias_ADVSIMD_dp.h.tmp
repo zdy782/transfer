@@ -1,0 +1,229 @@
+#ifdef __SLEEFSIMDDP_C__
+#ifdef ENABLE_ALIAS
+EXPORT CONST float64x2_t Sleef_sind2_u35(float64x2_t) __attribute__((alias("Sleef_sind2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sin_u35(float64x2_t) __attribute__((alias("Sleef_sind2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_cosd2_u35(float64x2_t) __attribute__((alias("Sleef_cosd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cos_u35(float64x2_t) __attribute__((alias("Sleef_cosd2_u35advsimd")));
+EXPORT CONST vdouble2 Sleef_sincosd2_u35(float64x2_t) __attribute__((alias("Sleef_sincosd2_u35advsimd"))) ;
+EXPORT CONST vdouble2 _ZGVnN2_Sleef_sincos_u35(float64x2_t) __attribute__((alias("Sleef_sincosd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_tand2_u35(float64x2_t) __attribute__((alias("Sleef_tand2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_tan_u35(float64x2_t) __attribute__((alias("Sleef_tand2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_asind2_u35(float64x2_t) __attribute__((alias("Sleef_asind2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_asin_u35(float64x2_t) __attribute__((alias("Sleef_asind2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_acosd2_u35(float64x2_t) __attribute__((alias("Sleef_acosd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_acos_u35(float64x2_t) __attribute__((alias("Sleef_acosd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_atand2_u35(float64x2_t) __attribute__((alias("Sleef_atand2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_atan_u35(float64x2_t) __attribute__((alias("Sleef_atand2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_atan2d2_u35(float64x2_t, float64x2_t) __attribute__((alias("Sleef_atan2d2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_atan2_u35(float64x2_t, float64x2_t) __attribute__((alias("Sleef_atan2d2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_logd2_u35(float64x2_t) __attribute__((alias("Sleef_logd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log_u35(float64x2_t) __attribute__((alias("Sleef_logd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_cbrtd2_u35(float64x2_t) __attribute__((alias("Sleef_cbrtd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cbrt_u35(float64x2_t) __attribute__((alias("Sleef_cbrtd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_sind2_u10(float64x2_t) __attribute__((alias("Sleef_sind2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sin_u10(float64x2_t) __attribute__((alias("Sleef_sind2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_cosd2_u10(float64x2_t) __attribute__((alias("Sleef_cosd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cos_u10(float64x2_t) __attribute__((alias("Sleef_cosd2_u10advsimd")));
+EXPORT CONST vdouble2 Sleef_sincosd2_u10(float64x2_t) __attribute__((alias("Sleef_sincosd2_u10advsimd"))) ;
+EXPORT CONST vdouble2 _ZGVnN2_Sleef_sincos_u10(float64x2_t) __attribute__((alias("Sleef_sincosd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_tand2_u10(float64x2_t) __attribute__((alias("Sleef_tand2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_tan_u10(float64x2_t) __attribute__((alias("Sleef_tand2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_asind2_u10(float64x2_t) __attribute__((alias("Sleef_asind2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_asin_u10(float64x2_t) __attribute__((alias("Sleef_asind2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_acosd2_u10(float64x2_t) __attribute__((alias("Sleef_acosd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_acos_u10(float64x2_t) __attribute__((alias("Sleef_acosd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_atand2_u10(float64x2_t) __attribute__((alias("Sleef_atand2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_atan_u10(float64x2_t) __attribute__((alias("Sleef_atand2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_atan2d2_u10(float64x2_t, float64x2_t) __attribute__((alias("Sleef_atan2d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_atan2_u10(float64x2_t, float64x2_t) __attribute__((alias("Sleef_atan2d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_logd2_u10(float64x2_t) __attribute__((alias("Sleef_logd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log_u10(float64x2_t) __attribute__((alias("Sleef_logd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_cbrtd2_u10(float64x2_t) __attribute__((alias("Sleef_cbrtd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cbrt_u10(float64x2_t) __attribute__((alias("Sleef_cbrtd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_expd2_u10(float64x2_t) __attribute__((alias("Sleef_expd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_exp_u10(float64x2_t) __attribute__((alias("Sleef_expd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_powd2_u10(float64x2_t, float64x2_t) __attribute__((alias("Sleef_powd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_pow_u10(float64x2_t, float64x2_t) __attribute__((alias("Sleef_powd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_sinhd2_u10(float64x2_t) __attribute__((alias("Sleef_sinhd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sinh_u10(float64x2_t) __attribute__((alias("Sleef_sinhd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_coshd2_u10(float64x2_t) __attribute__((alias("Sleef_coshd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cosh_u10(float64x2_t) __attribute__((alias("Sleef_coshd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_tanhd2_u10(float64x2_t) __attribute__((alias("Sleef_tanhd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_tanh_u10(float64x2_t) __attribute__((alias("Sleef_tanhd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_sinhd2_u35(float64x2_t) __attribute__((alias("Sleef_sinhd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sinh_u35(float64x2_t) __attribute__((alias("Sleef_sinhd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_coshd2_u35(float64x2_t) __attribute__((alias("Sleef_coshd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cosh_u35(float64x2_t) __attribute__((alias("Sleef_coshd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_tanhd2_u35(float64x2_t) __attribute__((alias("Sleef_tanhd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_tanh_u35(float64x2_t) __attribute__((alias("Sleef_tanhd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_asinhd2_u10(float64x2_t) __attribute__((alias("Sleef_asinhd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_asinh_u10(float64x2_t) __attribute__((alias("Sleef_asinhd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_acoshd2_u10(float64x2_t) __attribute__((alias("Sleef_acoshd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_acosh_u10(float64x2_t) __attribute__((alias("Sleef_acoshd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_atanhd2_u10(float64x2_t) __attribute__((alias("Sleef_atanhd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_atanh_u10(float64x2_t) __attribute__((alias("Sleef_atanhd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_exp2d2_u10(float64x2_t) __attribute__((alias("Sleef_exp2d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_exp2_u10(float64x2_t) __attribute__((alias("Sleef_exp2d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_exp2d2_u35(float64x2_t) __attribute__((alias("Sleef_exp2d2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_exp2_u35(float64x2_t) __attribute__((alias("Sleef_exp2d2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_exp10d2_u10(float64x2_t) __attribute__((alias("Sleef_exp10d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_exp10_u10(float64x2_t) __attribute__((alias("Sleef_exp10d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_exp10d2_u35(float64x2_t) __attribute__((alias("Sleef_exp10d2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_exp10_u35(float64x2_t) __attribute__((alias("Sleef_exp10d2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_expm1d2_u10(float64x2_t) __attribute__((alias("Sleef_expm1d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_expm1_u10(float64x2_t) __attribute__((alias("Sleef_expm1d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_log10d2_u10(float64x2_t) __attribute__((alias("Sleef_log10d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log10_u10(float64x2_t) __attribute__((alias("Sleef_log10d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_log2d2_u10(float64x2_t) __attribute__((alias("Sleef_log2d2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log2_u10(float64x2_t) __attribute__((alias("Sleef_log2d2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_log2d2_u35(float64x2_t) __attribute__((alias("Sleef_log2d2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log2_u35(float64x2_t) __attribute__((alias("Sleef_log2d2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_log1pd2_u10(float64x2_t) __attribute__((alias("Sleef_log1pd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_log1p_u10(float64x2_t) __attribute__((alias("Sleef_log1pd2_u10advsimd")));
+EXPORT CONST vdouble2 Sleef_sincospid2_u05(float64x2_t) __attribute__((alias("Sleef_sincospid2_u05advsimd"))) ;
+EXPORT CONST vdouble2 _ZGVnN2_Sleef_sincospi_u05(float64x2_t) __attribute__((alias("Sleef_sincospid2_u05advsimd")));
+EXPORT CONST vdouble2 Sleef_sincospid2_u35(float64x2_t) __attribute__((alias("Sleef_sincospid2_u35advsimd"))) ;
+EXPORT CONST vdouble2 _ZGVnN2_Sleef_sincospi_u35(float64x2_t) __attribute__((alias("Sleef_sincospid2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_sinpid2_u05(float64x2_t) __attribute__((alias("Sleef_sinpid2_u05advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sinpi_u05(float64x2_t) __attribute__((alias("Sleef_sinpid2_u05advsimd")));
+EXPORT CONST float64x2_t Sleef_cospid2_u05(float64x2_t) __attribute__((alias("Sleef_cospid2_u05advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_cospi_u05(float64x2_t) __attribute__((alias("Sleef_cospid2_u05advsimd")));
+EXPORT CONST float64x2_t Sleef_ldexpd2(float64x2_t, int32x2_t) __attribute__((alias("Sleef_ldexpd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_ldexp(float64x2_t, int32x2_t) __attribute__((alias("Sleef_ldexpd2_advsimd")));
+EXPORT CONST int32x2_t Sleef_ilogbd2(float64x2_t) __attribute__((alias("Sleef_ilogbd2_advsimd"))) ;
+EXPORT CONST int32x2_t _ZGVnN2v_Sleef_ilogb(float64x2_t) __attribute__((alias("Sleef_ilogbd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_fmad2(float64x2_t, float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmad2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vvv_Sleef_fma(float64x2_t, float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmad2_advsimd")));
+EXPORT CONST float64x2_t Sleef_sqrtd2(float64x2_t) __attribute__((alias("Sleef_sqrtd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sqrt(float64x2_t) __attribute__((alias("Sleef_sqrtd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_sqrtd2_u05(float64x2_t) __attribute__((alias("Sleef_sqrtd2_u05advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sqrt_u05(float64x2_t) __attribute__((alias("Sleef_sqrtd2_u05advsimd")));
+EXPORT CONST float64x2_t Sleef_sqrtd2_u35(float64x2_t) __attribute__((alias("Sleef_sqrtd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_sqrt_u35(float64x2_t) __attribute__((alias("Sleef_sqrtd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_hypotd2_u05(float64x2_t, float64x2_t) __attribute__((alias("Sleef_hypotd2_u05advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_hypot_u05(float64x2_t, float64x2_t) __attribute__((alias("Sleef_hypotd2_u05advsimd")));
+EXPORT CONST float64x2_t Sleef_hypotd2_u35(float64x2_t, float64x2_t) __attribute__((alias("Sleef_hypotd2_u35advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_hypot_u35(float64x2_t, float64x2_t) __attribute__((alias("Sleef_hypotd2_u35advsimd")));
+EXPORT CONST float64x2_t Sleef_fabsd2(float64x2_t) __attribute__((alias("Sleef_fabsd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_fabs(float64x2_t) __attribute__((alias("Sleef_fabsd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_copysignd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_copysignd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_copysign(float64x2_t, float64x2_t) __attribute__((alias("Sleef_copysignd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_fmaxd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmaxd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_fmax(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmaxd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_fmind2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmind2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_fmin(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmind2_advsimd")));
+EXPORT CONST float64x2_t Sleef_fdimd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fdimd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_fdim(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fdimd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_truncd2(float64x2_t) __attribute__((alias("Sleef_truncd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_trunc(float64x2_t) __attribute__((alias("Sleef_truncd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_floord2(float64x2_t) __attribute__((alias("Sleef_floord2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_floor(float64x2_t) __attribute__((alias("Sleef_floord2_advsimd")));
+EXPORT CONST float64x2_t Sleef_ceild2(float64x2_t) __attribute__((alias("Sleef_ceild2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_ceil(float64x2_t) __attribute__((alias("Sleef_ceild2_advsimd")));
+EXPORT CONST float64x2_t Sleef_roundd2(float64x2_t) __attribute__((alias("Sleef_roundd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_round(float64x2_t) __attribute__((alias("Sleef_roundd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_rintd2(float64x2_t) __attribute__((alias("Sleef_rintd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_rint(float64x2_t) __attribute__((alias("Sleef_rintd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_nextafterd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_nextafterd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_nextafter(float64x2_t, float64x2_t) __attribute__((alias("Sleef_nextafterd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_frfrexpd2(float64x2_t) __attribute__((alias("Sleef_frfrexpd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_frfrexp(float64x2_t) __attribute__((alias("Sleef_frfrexpd2_advsimd")));
+EXPORT CONST int32x2_t Sleef_expfrexpd2(float64x2_t) __attribute__((alias("Sleef_expfrexpd2_advsimd"))) ;
+EXPORT CONST int32x2_t _ZGVnN2v_Sleef_expfrexp(float64x2_t) __attribute__((alias("Sleef_expfrexpd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_fmodd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmodd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_fmod(float64x2_t, float64x2_t) __attribute__((alias("Sleef_fmodd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_remainderd2(float64x2_t, float64x2_t) __attribute__((alias("Sleef_remainderd2_advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2vv_Sleef_remainder(float64x2_t, float64x2_t) __attribute__((alias("Sleef_remainderd2_advsimd")));
+EXPORT CONST vdouble2 Sleef_modfd2(float64x2_t) __attribute__((alias("Sleef_modfd2_advsimd"))) ;
+EXPORT CONST vdouble2 _ZGVnN2_Sleef_modf(float64x2_t) __attribute__((alias("Sleef_modfd2_advsimd")));
+EXPORT CONST float64x2_t Sleef_lgammad2_u10(float64x2_t) __attribute__((alias("Sleef_lgammad2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_lgamma_u10(float64x2_t) __attribute__((alias("Sleef_lgammad2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_tgammad2_u10(float64x2_t) __attribute__((alias("Sleef_tgammad2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_tgamma_u10(float64x2_t) __attribute__((alias("Sleef_tgammad2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_erfd2_u10(float64x2_t) __attribute__((alias("Sleef_erfd2_u10advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_erf_u10(float64x2_t) __attribute__((alias("Sleef_erfd2_u10advsimd")));
+EXPORT CONST float64x2_t Sleef_erfcd2_u15(float64x2_t) __attribute__((alias("Sleef_erfcd2_u15advsimd"))) ;
+EXPORT CONST float64x2_t _ZGVnN2v_Sleef_erfc_u15(float64x2_t) __attribute__((alias("Sleef_erfcd2_u15advsimd")));
+EXPORT CONST int Sleef_getIntd2(int) __attribute__((alias("Sleef_getIntd2_advsimd"))) ;
+EXPORT CONST int _ZGVnN2_Sleef_getInt(int) __attribute__((alias("Sleef_getIntd2_advsimd")));
+EXPORT CONST void * Sleef_getPtrd2(int) __attribute__((alias("Sleef_getPtrd2_advsimd"))) ;
+EXPORT CONST void * _ZGVnN2_Sleef_getPtr(int) __attribute__((alias("Sleef_getPtrd2_advsimd")));
+
+#else // #ifdef ENABLE_ALIAS
+EXPORT CONST float64x2_t  Sleef_sind2_u35(float64x2_t a0) { return Sleef_sind2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_cosd2_u35(float64x2_t a0) { return Sleef_cosd2_u35advsimd(a0); }
+EXPORT CONST vdouble2  Sleef_sincosd2_u35(float64x2_t a0) { return Sleef_sincosd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_tand2_u35(float64x2_t a0) { return Sleef_tand2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_asind2_u35(float64x2_t a0) { return Sleef_asind2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_acosd2_u35(float64x2_t a0) { return Sleef_acosd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_atand2_u35(float64x2_t a0) { return Sleef_atand2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_atan2d2_u35(float64x2_t a0, float64x2_t a1) { return Sleef_atan2d2_u35advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_logd2_u35(float64x2_t a0) { return Sleef_logd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_cbrtd2_u35(float64x2_t a0) { return Sleef_cbrtd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_sind2_u10(float64x2_t a0) { return Sleef_sind2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_cosd2_u10(float64x2_t a0) { return Sleef_cosd2_u10advsimd(a0); }
+EXPORT CONST vdouble2  Sleef_sincosd2_u10(float64x2_t a0) { return Sleef_sincosd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_tand2_u10(float64x2_t a0) { return Sleef_tand2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_asind2_u10(float64x2_t a0) { return Sleef_asind2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_acosd2_u10(float64x2_t a0) { return Sleef_acosd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_atand2_u10(float64x2_t a0) { return Sleef_atand2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_atan2d2_u10(float64x2_t a0, float64x2_t a1) { return Sleef_atan2d2_u10advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_logd2_u10(float64x2_t a0) { return Sleef_logd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_cbrtd2_u10(float64x2_t a0) { return Sleef_cbrtd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_expd2_u10(float64x2_t a0) { return Sleef_expd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_powd2_u10(float64x2_t a0, float64x2_t a1) { return Sleef_powd2_u10advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_sinhd2_u10(float64x2_t a0) { return Sleef_sinhd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_coshd2_u10(float64x2_t a0) { return Sleef_coshd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_tanhd2_u10(float64x2_t a0) { return Sleef_tanhd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_sinhd2_u35(float64x2_t a0) { return Sleef_sinhd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_coshd2_u35(float64x2_t a0) { return Sleef_coshd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_tanhd2_u35(float64x2_t a0) { return Sleef_tanhd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_asinhd2_u10(float64x2_t a0) { return Sleef_asinhd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_acoshd2_u10(float64x2_t a0) { return Sleef_acoshd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_atanhd2_u10(float64x2_t a0) { return Sleef_atanhd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_exp2d2_u10(float64x2_t a0) { return Sleef_exp2d2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_exp2d2_u35(float64x2_t a0) { return Sleef_exp2d2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_exp10d2_u10(float64x2_t a0) { return Sleef_exp10d2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_exp10d2_u35(float64x2_t a0) { return Sleef_exp10d2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_expm1d2_u10(float64x2_t a0) { return Sleef_expm1d2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_log10d2_u10(float64x2_t a0) { return Sleef_log10d2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_log2d2_u10(float64x2_t a0) { return Sleef_log2d2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_log2d2_u35(float64x2_t a0) { return Sleef_log2d2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_log1pd2_u10(float64x2_t a0) { return Sleef_log1pd2_u10advsimd(a0); }
+EXPORT CONST vdouble2  Sleef_sincospid2_u05(float64x2_t a0) { return Sleef_sincospid2_u05advsimd(a0); }
+EXPORT CONST vdouble2  Sleef_sincospid2_u35(float64x2_t a0) { return Sleef_sincospid2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_sinpid2_u05(float64x2_t a0) { return Sleef_sinpid2_u05advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_cospid2_u05(float64x2_t a0) { return Sleef_cospid2_u05advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_ldexpd2(float64x2_t a0, int32x2_t a1) { return Sleef_ldexpd2_advsimd(a0, a1); }
+EXPORT CONST int32x2_t  Sleef_ilogbd2(float64x2_t a0) { return Sleef_ilogbd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_fmad2(float64x2_t a0, float64x2_t a1, float64x2_t a2) { return Sleef_fmad2_advsimd(a0, a1, a2); }
+EXPORT CONST float64x2_t  Sleef_sqrtd2(float64x2_t a0) { return Sleef_sqrtd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_sqrtd2_u05(float64x2_t a0) { return Sleef_sqrtd2_u05advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_sqrtd2_u35(float64x2_t a0) { return Sleef_sqrtd2_u35advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_hypotd2_u05(float64x2_t a0, float64x2_t a1) { return Sleef_hypotd2_u05advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_hypotd2_u35(float64x2_t a0, float64x2_t a1) { return Sleef_hypotd2_u35advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_fabsd2(float64x2_t a0) { return Sleef_fabsd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_copysignd2(float64x2_t a0, float64x2_t a1) { return Sleef_copysignd2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_fmaxd2(float64x2_t a0, float64x2_t a1) { return Sleef_fmaxd2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_fmind2(float64x2_t a0, float64x2_t a1) { return Sleef_fmind2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_fdimd2(float64x2_t a0, float64x2_t a1) { return Sleef_fdimd2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_truncd2(float64x2_t a0) { return Sleef_truncd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_floord2(float64x2_t a0) { return Sleef_floord2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_ceild2(float64x2_t a0) { return Sleef_ceild2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_roundd2(float64x2_t a0) { return Sleef_roundd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_rintd2(float64x2_t a0) { return Sleef_rintd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_nextafterd2(float64x2_t a0, float64x2_t a1) { return Sleef_nextafterd2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_frfrexpd2(float64x2_t a0) { return Sleef_frfrexpd2_advsimd(a0); }
+EXPORT CONST int32x2_t  Sleef_expfrexpd2(float64x2_t a0) { return Sleef_expfrexpd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_fmodd2(float64x2_t a0, float64x2_t a1) { return Sleef_fmodd2_advsimd(a0, a1); }
+EXPORT CONST float64x2_t  Sleef_remainderd2(float64x2_t a0, float64x2_t a1) { return Sleef_remainderd2_advsimd(a0, a1); }
+EXPORT CONST vdouble2  Sleef_modfd2(float64x2_t a0) { return Sleef_modfd2_advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_lgammad2_u10(float64x2_t a0) { return Sleef_lgammad2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_tgammad2_u10(float64x2_t a0) { return Sleef_tgammad2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_erfd2_u10(float64x2_t a0) { return Sleef_erfd2_u10advsimd(a0); }
+EXPORT CONST float64x2_t  Sleef_erfcd2_u15(float64x2_t a0) { return Sleef_erfcd2_u15advsimd(a0); }
+EXPORT CONST int  Sleef_getIntd2(int a0) { return Sleef_getIntd2_advsimd(a0); }
+EXPORT CONST void *  Sleef_getPtrd2(int a0) { return Sleef_getPtrd2_advsimd(a0); }
+
+#endif // #ifdef ENABLE_ALIAS
+#endif // #ifdef __SLEEFSIMDDP_C__

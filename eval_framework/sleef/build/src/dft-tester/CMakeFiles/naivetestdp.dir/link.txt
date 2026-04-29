@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/naivetestdp.dir/naivetest.c.o -o ../../bin/naivetestdp   -L/home/chenxuqiang/install/lib  -L/data/chenxuqiang/eval_framework/sleef/build/lib  -Wl,-rpath,/home/chenxuqiang/install/lib:/data/chenxuqiang/eval_framework/sleef/build/lib ../../lib/libsleef.a ../../lib/libsleefdft.a -fopenmp ../../lib/libsleef.a -ltlfloat -lm 

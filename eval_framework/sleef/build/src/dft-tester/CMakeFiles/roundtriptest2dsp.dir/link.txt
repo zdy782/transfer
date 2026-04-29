@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/roundtriptest2dsp.dir/roundtriptest2d.c.o -o ../../bin/roundtriptest2dsp   -L/home/chenxuqiang/install/lib  -L/data/chenxuqiang/eval_framework/sleef/build/lib  -Wl,-rpath,/home/chenxuqiang/install/lib:/data/chenxuqiang/eval_framework/sleef/build/lib ../../lib/libsleef.a ../../lib/libsleefdft.a -fopenmp ../../lib/libsleef.a -ltlfloat -lm 

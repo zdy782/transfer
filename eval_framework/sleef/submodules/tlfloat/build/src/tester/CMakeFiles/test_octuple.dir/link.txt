@@ -1,0 +1,1 @@
+/usr/bin/cc -O3 -DNDEBUG CMakeFiles/test_octuple.dir/test_octuple_dummy.c.o CMakeFiles/test_octuple_obj.dir/test_octuple.cpp.o -o ../../bin/test_octuple  ../../lib/libtlfloat.a -lm 

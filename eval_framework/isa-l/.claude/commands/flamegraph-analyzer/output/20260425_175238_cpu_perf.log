@@ -1,0 +1,5 @@
+gf_vect_mul_perf:
+Start timed tests
+gf_vect_mul_warm: runtime =    3062825 usecs, bandwidth 116370 MB in 3.0628 sec = 37994.60 MB/s
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 0.393 MB /home/chenxuqiang/eval_framework/isa-l/.claude/commands/flamegraph-analyzer/output/20260425_175238_cpu_raw.perf (3608 samples) ]

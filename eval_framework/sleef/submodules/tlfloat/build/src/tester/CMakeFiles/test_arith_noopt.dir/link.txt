@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -fcompare-debug-second -fconstexpr-ops-limit=1000000000 -fno-math-errno -O3 -DNDEBUG CMakeFiles/test_arith_noopt.dir/test_arith.cpp.o -o ../../bin/test_arith_noopt 

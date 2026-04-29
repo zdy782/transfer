@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG CMakeFiles/bench_syr.dir/bench_syr.cpp.o -o bench_syr  /usr/lib64/libbenchmark_main.so.1.6.1 /usr/lib64/libbenchmark.so.1.6.1 

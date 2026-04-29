@@ -1,0 +1,22 @@
+library:
+  name: {{library_name}}
+  description: "{{library_description}}"
+  repo_path: {{repo_path}}
+
+build:
+  type: {{build_type}}
+  commands:
+    configure: {{configure_command}}
+    build: {{build_command}}
+    test: {{test_command}}
+
+test_discovery:
+  perf_test_patterns:
+{{perf_patterns_list}}
+  exclude_patterns:
+{{exclude_patterns_list}}
+  search_locations:
+{{search_locations_list}}
+
+benchmark_source: {{benchmark_source}}
+third_party_benchmarks: []

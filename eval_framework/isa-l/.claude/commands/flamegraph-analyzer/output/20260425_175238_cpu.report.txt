@@ -1,0 +1,34 @@
+=== Flame Graph Report ===
+Type: CPU | Duration: 30s | Freq: 999Hz
+Total Samples: 3611611608
+
+Top 20 Hot Functions (% total):
+   95.5%  gf_vect_mul_sve
+    1.7%  main
+    1.0%  gf_vect_mul_init_base
+    0.8%  gf_vect_mul_init@plt
+    0.3%  gf_vect_mul@plt
+    0.2%  gf_vect_mul_init
+    0.2%  gf_vect_mul
+    0.1%  ptep_clear_flush
+    0.1%  kmem_cache_alloc
+    0.1%  [ld-linux-aarch64.so.1]
+    0.0%  folio_batch_move_lru
+    0.0%  [bash]
+    0.0%  __handle_mm_fault
+    0.0%  perf_iterate_ctx.constprop.0
+    0.0%  __pmd_alloc
+    0.0%  xfs_buf_get_map
+    0.0%  __call_rcu_common.constprop.0
+
+Top 10 Call Paths:
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul_sve  [95.5%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main  [1.7%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul_init_base  [1.0%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul_init@plt  [0.8%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul@plt  [0.3%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul_init  [0.2%]
+  lt-gf_vect_mul_;_start;__libc_start_main;[libc.so.6];main;gf_vect_mul  [0.2%]
+  sed;[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];__libc_early_init;el0t_64_sync;el0t_64_sync_handler;el0_ia;do_mem_abort;do_translation_fault;do_page_fault;handle_mm_fault;__handle_mm_fault  [0.0%]
+  sed;[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1]  [0.0%]
+  sed;[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1];[ld-linux-aarch64.so.1]  [0.0%]

@@ -1,0 +1,23 @@
+library:
+  name: sleef
+  description: "SIMD Library for Evaluating Elementary Functions"
+  repo_path: /data/chenxuqiang/eval_framework/sleef
+
+build:
+  type: cmake
+  commands:
+    configure: cmake -B build -DCMAKE_BUILD_TYPE=Release
+    build: cmake --build build -j$(nproc)
+    test: cmake --build build --target test
+
+test_discovery:
+  perf_test_patterns:
+    - "*bench*.cpp"
+    - "*bench*.c"
+  exclude_patterns:
+    - "*/test/*"
+    - "*/tests/*"
+  search_locations:
+    - .
+
+benchmark_source: official

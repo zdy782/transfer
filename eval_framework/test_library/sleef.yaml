@@ -1,0 +1,312 @@
+library:
+  name: sleef
+  description: "SIMD Library for Evaluating Elementary Functions"
+  platform: arm64
+  analyzed_at: "2026-04-27"
+  version: "master"
+
+metadata:
+  total_test_cases: 9
+  difficulty_distribution:
+    easy: 4
+    medium: 2
+    hard: 3
+
+test_cases:
+  - name: dftbench_double
+    perf_file: "src/dft-tester/dftbench.cpp"
+    benchmark_source: official
+    difficulty: medium
+    target_function:
+      file: "src/dft/dft.cpp"
+      name: SleefDFT_double_init1d / SleefDFT_execute
+      code_snippet: |
+        // Benchmark compares SleefDFT vs FFTW for 1D/2D double-precision DFT
+        // Uses BASETYPEID=1 for double precision
+        // Measures Mflops across varying sizes (2^1 to 2^18)
+        #if BASETYPEID == 1
+        typedef double xreal;
+        #define SLEEFDFT_INIT1D SleefDFT_double_init1d
+        #define SLEEFDFT_INIT2D SleefDFT_double_init2d
+        #elif BASETYPEID == 2
+        typedef float xreal;
+        #define SLEEFDFT_INIT1D SleefDFT_float_init1d
+        #define SLEEFDFT_INIT2D SleefDFT_float_init2d
+        #endif
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "The DFT library has both AdvSIMD and SVE kernel variants generated at build time via mkunroll. The butterfly kernels are template-generated C++ compiled with architecture-specific flags. The SVE path supports multiple vector widths (256/512/1024/2048-bit). However, the generated kernel code has limited SVE-specific optimizations beyond wider vectors; the algorithm structure is shared with NEON. Moderate optimization potential exists in better SVE predicate utilization and butterfly scheduling."
+      optimization_potential: "medium"
+      suggested_improvements:
+        - "SVE kernels could use gather/scatter and predicated loads for more efficient twiddle factor access"
+        - "DFT butterfly scheduling could be optimized for SVE's variable vector length"
+        - "Multi-threaded planning path could better partition work for SVE wide vectors"
+
+  - name: dftbench_float
+    perf_file: "src/dft-tester/dftbench.cpp"
+    benchmark_source: official
+    difficulty: medium
+    target_function:
+      file: "src/dft/dft.cpp"
+      name: SleefDFT_float_init1d / SleefDFT_execute
+      code_snippet: |
+        // Same benchmark file as dftbench_double, compiled with BASETYPEID=2
+        // Single-precision DFT variant using float
+        // Measures Mflops for 1D/2D float-precision DFT
+        #if BASETYPEID == 2
+        typedef float xreal;
+        #define SLEEFDFT_INIT1D SleefDFT_float_init1d
+        #define SLEEFDFT_INIT2D SleefDFT_float_init2d
+        #endif
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "Same DFT implementation as the double-precision variant but for single precision. The float path uses VECTLENSP (4 for NEON, variable for SVE) allowing more elements per vector. The generated unrolled kernels handle 4-wide NEON and VL-agnostic SVE. Moderate optimization potential due to same algorithmic structure shared across precision modes."
+      optimization_potential: "medium"
+      suggested_improvements:
+        - "SP kernels could leverage wider SVE vectors more effectively with 2x the element throughput vs DP"
+        - "Consider fusing adjacent butterfly stages when vector width allows"
+        - "Better use of SVE predicated stores for remainder handling in non-power-of-2 sizes"
+
+  - name: libm_sin_cos_dp
+    perf_file: "src/libm-tester/tester4simd.cpp"
+    benchmark_source: official
+    difficulty: easy
+    target_function:
+      file: "src/libm/sleefsimddp.c"
+      name: xsin / xcos
+      code_snippet: |
+        EXPORT CONST vdouble xsin(vdouble d) {
+          vdouble u, s, r = d;
+          vint ql;
+          vdouble dql = vrint_vd_vd(vmul_vd_vd_vd(d, vcast_vd_d(M_1_PI)));
+          ql = vrint_vi_vd(dql);
+          d = vmla_vd_vd_vd_vd(dql, vcast_vd_d(-PI_A2), d);
+          d = vmla_vd_vd_vd_vd(dql, vcast_vd_d(-PI_B2), d);
+          vopmask g = vlt_vo_vd_vd(vabs_vd_vd(r), vcast_vd_d(TRIGRANGEMAX2));
+          if (!LIKELY(vtestallones_i_vo64(g))) {
+            vdouble dqh = vtruncate_vd_vd(vmul_vd_vd_vd(r, vcast_vd_d(M_1_PI / (1 << 24))));
+            dqh = vmul_vd_vd_vd(dqh, vcast_vd_d(1 << 24));
+            vdouble dql = vrint_vd_vd(vmlapn_vd_vd_vd_vd(r, vcast_vd_d(M_1_PI), dqh));
+            u = vmla_vd_vd_vd_vd(dqh, vcast_vd_d(-PI_A), r);
+            u = vmla_vd_vd_vd_vd(dql, vcast_vd_d(-PI_A), u);
+            u = vmla_vd_vd_vd_vd(dqh, vcast_vd_d(-PI_B), u);
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "sin/cos are fully vectorized using the portable SIMD abstraction layer. Both NEON (AdvSIMD with FMA) and SVE backends are implemented via helperadvsimd.h and helpersve.h. The trigonometric range reduction uses multi-step Cody-Waite with double-double arithmetic. The polynomial evaluation uses Estrin's scheme with architecture-agnostic coefficients. The SVE path maps directly to SVE intrinsics (svadd_f64_x, svmad_f64_x, etc.). These are mature, well-tested implementations with low optimization potential."
+      optimization_potential: "low"
+      suggested_improvements:
+        - "SVE path could use svcmpeq_b64 predicated comparison to avoid explicit mask management in range reduction"
+        - "Estrin polynomial evaluation could be slightly restructured for better ILP on SVE"
+
+  - name: libm_exp_log_dp
+    perf_file: "src/libm-tester/tester4simd.cpp"
+    benchmark_source: official
+    difficulty: easy
+    target_function:
+      file: "src/libm/sleefsimddp.c"
+      name: xexp / xlog
+      code_snippet: |
+        EXPORT CONST vdouble xexp(vdouble d) {
+          vdouble u = vrint_vd_vd(vmul_vd_vd_vd(d, vcast_vd_d(R_LN2))), s;
+          vint q = vrint_vi_vd(u);
+          s = vmla_vd_vd_vd_vd(u, vcast_vd_d(-L2U), d);
+          s = vmla_vd_vd_vd_vd(u, vcast_vd_d(-L2L), s);
+          vdouble s2 = vmul_vd_vd_vd(s, s), s4 = vmul_vd_vd_vd(s2, s2), s8 = vmul_vd_vd_vd(s4, s4);
+          u = POLY10(s, s2, s4, s8,
+                     +0.2081276378237164457e-8,
+                     +0.2511210703042288022e-7,
+                     +0.2755762628169491192e-6,
+                     +0.2755723402025388239e-5,
+                     +0.2480158687479686264e-4,
+                     +0.1984126989855865850e-3,
+          u = vfma_vd_vd_vd_vd(u, s, vcast_vd_d(+0.5000000000000000000e+0));
+          u = vfma_vd_vd_vd_vd(u, s, vcast_vd_d(+0.1000000000000000000e+1));
+          u = vfma_vd_vd_vd_vd(u, s, vcast_vd_d(+0.1000000000000000000e+1));
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "exp and log use the same portable SIMD abstraction as sin/cos. Both are already fully optimized for NEON and SVE. exp uses range reduction via log(2) with degree-10 polynomial. log uses argument reduction with log(1+m)/2 series. The AVX512F path has special vgetexp/vgetmant optimization but the NEON/SVE paths use the general vilogb2k approach. These are well-optimized with FMA utilization and low remaining optimization potential."
+      optimization_potential: "low"
+      suggested_improvements:
+        - "SVE path for xlog could use svexpa/svlogb instructions where available for faster range reduction"
+        - "The AVX512F-specific vgetexp/vgetmant fast path could have a SVE equivalent using svlogb/svldexp1n"
+
+  - name: libm_atan_asin_dp
+    perf_file: "src/libm-tester/tester4simd.cpp"
+    benchmark_source: official
+    difficulty: easy
+    target_function:
+      file: "src/libm/sleefsimddp.c"
+      name: xatan / xasin / xacos
+      code_snippet: |
+        EXPORT CONST vdouble xatan(vdouble s) {
+          vdouble t, u;
+          vopmask q = vlt_vo_vd_vd(vabs_vd_vd(s), vcast_vd_d(1.0));
+          s = vsel_vd_vo_vd_vd(q, s, vdiv_vd_vd_vd(vcast_vd_d(1), s));
+          s = vsel_vd_vo_vd_vd(q, s, vneg_vd_vd(s));
+          t = vmul_vd_vd_vd(s, s);
+          u = vcast_vd_d(0.00282346372843206084853);
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(-0.0159569028764213828774));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(0.0442250705417341604664));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(-0.075518454960820842945));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(0.105521605397584029045));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(-0.133185244807401834762));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(0.169065949782313530377));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(-0.214580749062200459663));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(0.299095020548421878798));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(-0.455537626641548687473));
+          u = vmla_vd_vd_vd_vd(u, t, vcast_vd_d(0.999999999957157628102));
+          u = vmul_vd_vd_vd(u, s);
+          u = vadd_vd_vd_vd(u, vsel_vd_vo_vd_vd(q, vcast_vd_d(0), vcast_vd_d(M_PI_2)));
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "Inverse trigonometric functions (atan, asin, acos) are implemented using the same portable SIMD pattern with NEON and SVE backends. The atan function uses a degree-10 polynomial after argument reduction (1/s for |s|>1). asin and acos use sqrt + polynomial approximation. All are well-optimized with FMA chains and proper handling of edge cases via predicated operations. Low optimization potential since the algorithms are mature and already use SIMD intrinsics effectively."
+      optimization_potential: "low"
+      suggested_improvements:
+        - "SVE predicated select could replace explicit vsel chains in argument reduction for slightly cleaner codegen"
+        - "asin/acos could benefit from SVE's native vsqrt which is already used via the helper abstraction"
+
+  - name: libm_sin_cos_sp
+    perf_file: "src/libm-tester/tester4simd.cpp"
+    benchmark_source: official
+    difficulty: easy
+    target_function:
+      file: "src/libm/sleefsimdsp.c"
+      name: xsinf / xcosf
+      code_snippet: |
+        EXPORT CONST vfloat xsinf(vfloat d) {
+          vfloat u, s, r = d;
+          vint2 ql;
+          vfloat dql = vrint_vf_vf(vmul_vf_vf_vf(d, vcast_vf_f((float)M_1_PI)));
+          ql = vrint_vi2_vf(dql);
+          d = vmla_vf_vf_vf_vf(dql, vcast_vf_f(-(float)PI_A2f), d);
+          d = vmla_vf_vf_vf_vf(dql, vcast_vf_f(-(float)PI_B2f), d);
+          vopmask g = vlt_vo_vf_vf(vabs_vf_vf(r), vcast_vf_f(TRIGRANGEMAX2f));
+          if (!LIKELY(vtestallones_i_vo32(g))) {
+            vfloat dqh = vtruncate_vf_vf(vmul_vf_vf_vf(r, vcast_vf_f((float)M_1_PI / (1 << 12))));
+            dqh = vmul_vf_vf_vf(dqh, vcast_vf_f((float)(1 << 12)));
+            vfloat dql = vrint_vf_vf(vmlapn_vf_vf_vf_vf(r, vcast_vf_f((float)M_1_PI), dqh));
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "Single-precision sin/cos use the same portable SIMD architecture as double precision. NEON processes 4 floats per vector (VECTLENSP=2), SVE is VL-agnostic. The float-specific coefficients (PI_A2f, PI_B2f) use 12-bit instead of 24-bit Cody-Waite range reduction. The algorithm is mature and well-optimized with full NEON FMA and SVE support. Low optimization potential."
+      optimization_potential: "low"
+      suggested_improvements:
+        - "SP trig functions could potentially use faster approximate SVE instructions (svrsqrte, etc.) for reduced-accuracy variants"
+        - "The fastsinf_u3500 and fastcosf_u3500 variants already exploit reduced range; further approximations could skip more range reduction steps on SVE"
+
+  - name: tlfloat_quad_math
+    perf_file: "submodules/tlfloat/src/util/bench.cpp"
+    benchmark_source: official
+    difficulty: hard
+    target_function:
+      file: "submodules/tlfloat/include/tlfloat/tlmath.hpp"
+      name: tlfloat::sin / tlfloat::atan / tlfloat::exp / tlfloat::log / tlfloat::pow
+      code_snippet: |
+        // Benchmarks quad and octuple precision math operations
+        // Using either C++ API (tlfloat::sin, etc.) or C API (tlfloat_sinq, etc.)
+        #if defined(CONFIG_TLFLOAT_QUAD)
+        #include <tlfloat/tlmath.hpp>
+        #define CONFIG "tlfloat quad"
+        using namespace tlfloat;
+        typedef Quad real;
+        #define SIN  sin
+        #define ATAN atan
+        #define EXP  exp
+        #define LOG  log
+        #define POW  pow
+        #elif defined(CONFIG_TLFLOAT_OCTUPLE)
+        #include <tlfloat/tlmath.hpp>
+        #define CONFIG "tlfloat octuple"
+        using namespace tlfloat;
+        typedef Octuple real;
+      arm_features:
+        - neon
+    analysis:
+      reason: "TLFloat implements quad-precision (128-bit) and octuple-precision (256-bit) math entirely in software using integer arithmetic. These operations are extremely slow compared to hardware-accelerated double precision. There is no SIMD vectorization for the internal multi-word arithmetic. The quad-precision functions (sin, atan, exp, log, pow) each involve hundreds of integer multiplications and additions using software carry propagation. This represents the highest optimization potential since the entire computation path is scalar C++ code with no ARM-specific optimization. NEON could be used to accelerate the multi-word integer arithmetic (e.g., 128-bit addition via vpaddq, 128-bit multiply via vmull)."
+      optimization_potential: "high"
+      suggested_improvements:
+        - "Use NEON vpaddq/vmull for multi-word integer arithmetic in quad-precision operations"
+        - "Implement NEON-accelerated 128-bit addition and multiplication primitives for the software float layer"
+        - "Use SVE for even wider vectorization of the multi-word carry chains in octuple precision"
+        - "Consider NEON table lookups (vtbl/vqtbl) for faster coefficient access in polynomial evaluation"
+
+  - name: tlfloat_quad_arithmetic
+    perf_file: "submodules/tlfloat/src/util/bench.cpp"
+    benchmark_source: official
+    difficulty: hard
+    target_function:
+      file: "submodules/tlfloat/include/tlfloat/tlmath.hpp"
+      name: tlfloat::fma / sqrt / rint (quad-precision)
+      code_snippet: |
+        // Benchmarks core quad-precision arithmetic operations
+        #define FMA  fma
+        #define SQRT sqrt
+        #define RINT rint
+        // These are measured as Mops/second for K=256 elements
+        measure("FMA                 ", funcFMA        , K, sec_us);
+        measure("Square root         ", funcSqrt       , K, sec_us);
+        measure("Rint                ", funcRint       , K, sec_us);
+        measure("Addition            ", funcAddSub     , K, sec_us);
+        measure("Multiplication      ", funcMul        , K, sec_us);
+        measure("Division            ", funcDiv        , K, sec_us);
+        measure("Cast to/from double ", funcCastDouble , K, sec_us);
+        measure("Compare             ", funcCompare    , K, sec_us);
+      arm_features:
+        - neon
+    analysis:
+      reason: "The basic quad-precision arithmetic operations (add, mul, div, fma, sqrt, compare, cast) are all implemented in software using multi-word integer arithmetic. These are the building blocks for all higher math functions and are entirely scalar. The K=256 element loop with no SIMD vectorization means NEON registers are completely unused. Each operation involves manipulating 128-bit (quad) or 256-bit (octuple) values stored as arrays of 32-bit or 64-bit integers. NEON 128-bit registers naturally map to quad-precision data, making vectorization of the inner arithmetic highly feasible with significant expected speedup."
+      optimization_potential: "high"
+      suggested_improvements:
+        - "Map quad-precision values to NEON uint64x2_t for 128-bit arithmetic with hardware carry"
+        - "Use NEON vaddq_u64/vsubq_u64 for 128-bit add/sub with carry detection via vclt"
+        - "Implement quad FMA using vmull_u32 + vaddq_u64 chain with NEON carry propagation"
+        - "Use SVE for 4-wide or 8-wide quad-precision SIMD when available"
+
+  - name: quad_precision_math
+    perf_file: "src/quad-tester/qtester4simd.cpp"
+    benchmark_source: official
+    difficulty: hard
+    target_function:
+      file: "src/quad/sleefsimdqp.c"
+      name: xsinq / xexpq / xlogq / xatanq / xpowq
+      code_snippet: |
+        // sleefsimdqp.c implements quad-precision math functions
+        // using the same portable SIMD abstraction but at quad precision
+        // These are built with ENABLE_ADVSIMD and ENABLE_SVE configurations
+        // The underlying arithmetic uses the double-double or triple-double
+        // technique for extended precision
+        #ifdef ENABLE_ADVSIMD
+        #define CONFIG 1
+        #include "helperadvsimd.h"
+        #ifdef DORENAME
+        #include "renameadvsimd.h"
+        #endif
+        #endif
+        #ifdef ENABLE_SVE
+        #define CONFIG 1
+        #include "helpersve.h"
+        #ifdef DORENAME
+        #include "renamesve.h"
+        #endif
+      arm_features:
+        - neon
+        - sve
+    analysis:
+      reason: "SLEEF's quad-precision library (libsleefquad) implements quad math using the same portable SIMD architecture as the double/float library, but the quad values are stored as pairs of SIMD registers (vquad = svint32x2_t for SVE, struct { vmask x, y } for NEON). The math functions use double-double and triple-double arithmetic techniques. While the code uses SIMD registers, the effective vector width for quad-precision is very small (NEON: 1 quad per 128-bit register, SVE: VL/128 quads). The algorithmic complexity of quad-precision math (many more polynomial terms, more range reduction steps) combined with limited parallelism per vector makes this harder to optimize than standard precision. However, the SVE path's variable-length vectors could provide meaningful speedup for batch quad operations."
+      optimization_potential: "high"
+      suggested_improvements:
+        - "SVE's wider vectors allow processing more quad values simultaneously; optimize for VL=256 and VL=512"
+        - "The triple-double arithmetic chains could be restructured to reduce dependency chain length"
+        - "Batch processing of independent quad operations could use NEON's full width more effectively"
+        - "Consider algorithm-level optimizations: use fewer but higher-degree polynomial terms where accuracy permits"
